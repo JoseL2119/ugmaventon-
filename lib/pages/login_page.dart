@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final VoidCallback showRegisterPage;
+  const LoginPage({Key? key,required this.showRegisterPage}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -117,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 50,
                 ),
 
-                //Boton IniciarSesion
+                //Boton de IniciarSesion
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Container(
@@ -153,11 +154,14 @@ class _LoginPageState extends State<LoginPage> {
                         color: Color(0xFFFAFAFA),
                       ),
                     ),
-                    Text(
-                      ' ¡Registrate!',
-                      style: TextStyle(
-                          color: Color(0xFFFAFAFA),
-                          fontWeight: FontWeight.bold),
+                    GestureDetector(
+                      onTap: widget.showRegisterPage,
+                      child: Text(
+                        ' ¡Registrate!',
+                        style: TextStyle(
+                            color: Color(0xFFFAFAFA),
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 )
