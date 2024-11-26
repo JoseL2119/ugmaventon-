@@ -63,13 +63,8 @@ class _MainState extends State<Main> with OSMMixinObserver {
   void onSingleTap(GeoPoint position) {
     super.onSingleTap(position);
     Future.microtask(() async {
-      if (lastGeoPoint.value != null) {
-        // await controller.changeLocationMarker(
-        //   oldLocation: lastGeoPoint.value!,
-        //   newLocation: position,
-        //   //iconAnchor: IconAnchor(anchor: Anchor.top),
-        // );
-        //controller.removeMarker(lastGeoPoint.value!);
+      if (geos.isNotEmpty) {
+        // Añadir un marcador para el nuevo punto
         await controller.addMarker(
           position,
           markerIcon: const MarkerIcon(
@@ -79,28 +74,40 @@ class _MainState extends State<Main> with OSMMixinObserver {
               size: 32,
             ),
           ),
-          //angle: userLocation.angle,
         );
+
+        // Calcular y dibujar la ruta entre el último punto y el nuevo
+        final roadInfo = await controller.drawRoad(
+          geos.last,
+          position,
+          roadType: RoadType.car, // Puedes cambiar a bike o foot si prefieres
+          roadOption: const RoadOption(
+            roadColor: Colors.blueAccent,
+            //showMarkerOfPOI: false,
+          ),
+        );
+
+        if (roadInfo != null) {
+          debugPrint(
+              'Distancia: ${roadInfo.distance} km, Duración: ${roadInfo.duration} min');
+        }
       } else {
+        // Añadir un marcador inicial para el primer punto
         await controller.addMarker(
           position,
           markerIcon: const MarkerIcon(
             icon: Icon(
               Icons.person_pin,
-              color: Colors.red,
+              color: Color.fromARGB(255, 54, 98, 244),
               size: 32,
             ),
           ),
-          // iconAnchor: IconAnchor(
-          //   anchor: Anchor.left,
-          //   //offset: (x: 32.5, y: -32),
-          // ),
-          //angle: -pi / 4,
         );
       }
-      //await controller.moveTo(position, animate: true);
-      lastGeoPoint.value = position;
+
+      // Actualizar la lista de puntos
       geos.add(position);
+      lastGeoPoint.value = position;
     });
   }
 
