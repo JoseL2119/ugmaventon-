@@ -231,6 +231,41 @@ class _MainState extends State<Main> with OSMMixinObserver {
                       controller: controller,
                     ),
                   ),
+                  Positioned(
+                    bottom: 200,
+                    right: 15,
+                    child: IconButton(
+                      onPressed: () async {
+                        if (geos.isNotEmpty) {
+                          // Eliminar el último marcador
+                          final lastPoint = geos.removeLast();
+                          await controller.removeMarker(lastPoint);
+
+                          await controller.clearAllRoads();
+
+                          // Para manejar rutas, simplemente redibuja las necesarias
+                          if (geos.length > 1) {
+                            await controller.drawRoad(
+                              geos.first,
+                              geos.last,
+                              roadType: RoadType.car,
+                              roadOption: const RoadOption(
+                                roadColor: Colors.blueAccent,
+                              ),
+                            );
+                          } else {
+                            // Si no quedan puntos suficientes, no hay ruta que redibujar
+                          }
+
+                          // Actualizar el último punto marcado
+                          lastGeoPoint.value =
+                              geos.isNotEmpty ? geos.last : null;
+                        }
+                      },
+                      icon: const Icon(Icons.undo, color: Colors.red),
+                      tooltip: "Eliminar última ruta",
+                    ),
+                  ),
                 ],
               );
             },
