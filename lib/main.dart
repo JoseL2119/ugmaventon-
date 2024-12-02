@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ugmaventon/pages/register_page.dart';
-import 'pages/login_page.dart';
+import 'package:ugmaventon/routes/app_routes.dart';
 
 // Importaciones de Firebase y FireStore
-
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -23,7 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegisterPage(),
+      initialRoute: AppRoutes.initialRoute,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }
 }
