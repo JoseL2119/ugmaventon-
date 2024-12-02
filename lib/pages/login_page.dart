@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ugmaventon/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -120,20 +121,36 @@ class _LoginPageState extends State<LoginPage> {
                 //Boton de IniciarSesion
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Container(
-                    width: 200, // Set the desired width
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFD900),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Iniciar Sesión',
-                        style: TextStyle(
-                          color: Color(0xFF003AA7),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                  child: GestureDetector(
+                    onTap: () async {
+                      final email = _emailController.text.trim();
+                      final password = _passwordController.text.trim();
+
+                      final success = await loginUser(email,password);
+
+                      if (success) {
+                        Navigator.pushNamed(context, '/home');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Correo o Contraseñas incorrectos')),
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: 200, // Set the desired width
+                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFD900),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Iniciar Sesión',
+                          style: TextStyle(
+                            color: Color(0xFF003AA7),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                     ),
