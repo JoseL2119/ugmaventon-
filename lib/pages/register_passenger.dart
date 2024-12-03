@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class RegisterPassengerPage extends StatefulWidget {
   const RegisterPassengerPage({Key? key}) : super(key: key);
@@ -19,6 +20,12 @@ class _RegisterPassengerPageState extends State<RegisterPassengerPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
+  XFile? photo;
+
+  Future getImageFromGallery() async {
+    photo = await ImagePicker().pickImage(source: ImageSource.gallery);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,6 +142,7 @@ class _RegisterPassengerPageState extends State<RegisterPassengerPage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       // Acción para subir foto
+                      getImageFromGallery();
                     },
                     icon: const Icon(
                       Icons.upload,
@@ -157,6 +165,7 @@ class _RegisterPassengerPageState extends State<RegisterPassengerPage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       // Acción para subir foto
+                      getImageFromGallery();
                     },
                     icon: const Icon(
                       Icons.upload,
