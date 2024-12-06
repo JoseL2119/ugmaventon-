@@ -9,6 +9,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  AuthService _authService = AuthService();
+
 //controladores/identificadores de lo que se agregue en los textFields
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -126,9 +128,15 @@ class _LoginPageState extends State<LoginPage> {
                       final email = _emailController.text.trim();
                       final password = _passwordController.text.trim();
 
-                      final success = await loginUser(email,password);
+                      final success = await _authService.loginUser(
+                          email:email,
+                          password:password
+                      );
 
                       if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Inicio Exitoso")),
+                        );
                         Navigator.pushNamed(context, '/home');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
