@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "509650098162",
+    "project_id": "ugma-aventon",
+    "storage_bucket": "ugma-aventon.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509650098162:android:233a4ad87f2a2660547d6b",
+        "android_client_info": {
+          "package_name": "com.example.ugmaventon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE0wOmb22HJ1vs5WavfdJtFgNUJF-MepE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
