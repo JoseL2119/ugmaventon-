@@ -10,9 +10,13 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   String? selectedYear;
   bool? tintedWindows;
-  int? doorCount;
+  String? doorCount; // Almacenará la opción seleccionada para las puertas.
+  bool? hasAirConditioning;
   bool termsAccepted = false;
   String? selectedVehicle;
+
+  final TextEditingController plateController = TextEditingController();
+  final TextEditingController colorController = TextEditingController();
 
   final List<Map<String, String>> vehicleTypes = [
     {"label": "Mini", "icon": "directions_car"},
@@ -22,32 +26,32 @@ class _RegisterPageState extends State<RegisterPage> {
     {"label": "Moto", "icon": "two_wheeler"},
   ];
 
+  String? uploadedLicense;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Color(0xFFFFD900),
+      backgroundColor: const Color(0xFFFFD900),
       appBar: AppBar(
-        title: Center(
-          child: const Text("Registro", style: 
-          TextStyle( color: Color(0xFFFFD900))),
+        title: const Center(
+          child: Text("Registro", style: TextStyle(color: Color(0xFFFFD900))),
         ),
-        backgroundColor: Color(0xFF003AA7),
+        backgroundColor: const Color(0xFF003AA7),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Espacio entre el contenido del formulario y el borde de la pantalla
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: Colors.white, // Fondo blanco para el formulario
-                borderRadius: BorderRadius.circular(20.0), // Bordes redondeados
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
                 boxShadow: const [
                   BoxShadow(color: Colors.grey, blurRadius: 5.0, spreadRadius: 2.0)
-                ], // Sombras para el efecto
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,258 +61,195 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  // Primera fila de iconos
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: vehicleTypes.sublist(0, 3).map((vehicle) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedVehicle = vehicle["label"];
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: selectedVehicle == vehicle["label"]
-                                  ? Color(0xFF003AA7)
-                                  : Color.fromARGB(87, 0, 58, 167),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: [
-                              Icon(
-                                _getIconData(vehicle["icon"]!),
-                                size: 40,
-                              ),
-                              const SizedBox(height: 5),
-                              Text(vehicle["label"]!),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 10),
-                  // Segunda fila de iconos
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: vehicleTypes.sublist(3).map((vehicle) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedVehicle = vehicle["label"];
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: selectedVehicle == vehicle["label"]
-                                  ? Color(0xFF003AA7)
-                                  : Color.fromARGB(87, 0, 58, 167),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: [
-                              Icon(
-                                _getIconData(vehicle["icon"]!),
-                                size: 40,
-                              ),
-                              const SizedBox(height: 5),
-                              Text(vehicle["label"]!),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 20),
-                  Center(
-                    child: Container(
-                      width: 250,
-                      child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                        labelText: "¿De qué año es su vehículo?",
-                        labelStyle: const TextStyle(color: Colors.black),
-                        enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF003AA7)),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                         borderSide: BorderSide(color: Color(0xFF003AA7), width: 2), // Asegúrate que el color sea el mismo para cuando esté enfocado
-),
-                        
-                        ),
-                        items: List.generate(
-                          30,
-                          (index) {
-                            int year = DateTime.now().year - index;
-                            return DropdownMenuItem(
-                              value: year.toString(),
-                              child: Center(child: Text(year.toString(),)),
-                            );
-                          },
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedYear = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Center(
-                    child: Text(
-                      "¿Su vehículo tiene vidrios ahumados?",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          Radio<bool>(
-                            value: true,
-                            groupValue: tintedWindows,
-                            onChanged: (value) {
-                              setState(() {
-                                tintedWindows = value;
-                              });
-                            },
-                            activeColor: Color(0xFF003AA7),
-                          ),
-                          const Text("Sí"),
-                        ],
-                      ),
-                      const SizedBox(width: 30),
-                      Row(
-                        children: [
-                          Radio<bool>(
-                            value: false,
-                            groupValue: tintedWindows,
-                            onChanged: (value) {
-                              setState(() {
-                                tintedWindows = value;
-                              });
-                            },
-                            activeColor: Color(0xFF003AA7),
-                          ),
-                          const Text("No"),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const Center(
-                    child: Text(
-                      "¿Cuántas puertas tiene su vehículo?",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          Radio<int>(
-                            value: 2,
-                            groupValue: doorCount,
-                            onChanged: (value) {
-                              setState(() {
-                                doorCount = value;
-                              });
-                            },
-                            activeColor: Color(0xFF003AA7),
-                          ),
-                          const Text("2 puertas"),
-                        ],
-                      ),
-                      const SizedBox(width: 30),
-                      Row(
-                        children: [
-                          Radio<int>(
-                            value: 4,
-                            groupValue: doorCount,
-                            onChanged: (value) {
-                              setState(() {
-                                doorCount = value;
-                              });
-                            },
-                            activeColor: Color(0xFF003AA7),
-                          ),
-                          const Text("4 puertas"),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Radio<int>(
-                          value: 0,
-                          groupValue: doorCount,
-                          onChanged: (value) {
+                  // Selección de vehículos con scroll horizontal
+                  SizedBox(
+                    height: 100,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: vehicleTypes.map((vehicle) {
+                        return GestureDetector(
+                          onTap: () {
                             setState(() {
-                              doorCount = value;
+                              selectedVehicle = vehicle["label"];
                             });
                           },
-                          activeColor: Color(0xFF003AA7),
-                        ),
-                        const Text("No aplica"),
-                      ],
+                          child: Container(
+                            width: 100,
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: selectedVehicle == vehicle["label"]
+                                    ? const Color(0xFF003AA7)
+                                    : const Color.fromARGB(87, 0, 58, 167),
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  _getIconData(vehicle["icon"]!),
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 5),
+                                Text(vehicle["label"]!),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const TextField(
+                  // Año del vehículo
+                  DropdownButtonFormField<String>(
                     decoration: InputDecoration(
-                      labelText: "¿Cuál es el color de su vehículo?",
+                      labelText: "¿De qué año es su vehículo?",
+                      labelStyle: const TextStyle(color: Colors.black),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF003AA7)),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF003AA7), width: 2),
+                      ),
+                    ),
+                    items: List.generate(
+                      30,
+                      (index) {
+                        int year = DateTime.now().year - index;
+                        return DropdownMenuItem(
+                          value: year.toString(),
+                          child: Center(child: Text(year.toString())),
+                        );
+                      },
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedYear = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  // Vidrios ahumados
+                  const Text(
+                    "¿Su vehículo tiene vidrios ahumados?",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Radio<bool>(
+                        value: true,
+                        groupValue: tintedWindows,
+                        onChanged: (value) {
+                          setState(() {
+                            tintedWindows = value;
+                          });
+                        },
+                        activeColor: const Color(0xFF003AA7),
+                      ),
+                      const Text("Sí"),
+                      const SizedBox(width: 30),
+                      Radio<bool>(
+                        value: false,
+                        groupValue: tintedWindows,
+                        onChanged: (value) {
+                          setState(() {
+                            tintedWindows = value;
+                          });
+                        },
+                        activeColor: const Color(0xFF003AA7),
+                      ),
+                      const Text("No"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Número de puertas del vehículo
+                  const Text(
+                    "¿Cuántas puertas tiene su vehículo?",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildDoorOption("2"),
+                      _buildDoorOption("4"),
+                      _buildDoorOption("No aplica"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Aire acondicionado
+                  const Text(
+                    "¿El vehículo tiene aire acondicionado?",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Radio<bool>(
+                        value: true,
+                        groupValue: hasAirConditioning,
+                        onChanged: (value) {
+                          setState(() {
+                            hasAirConditioning = value;
+                          });
+                        },
+                        activeColor: const Color(0xFF003AA7),
+                      ),
+                      const Text("Sí"),
+                      const SizedBox(width: 30),
+                      Radio<bool>(
+                        value: false,
+                        groupValue: hasAirConditioning,
+                        onChanged: (value) {
+                          setState(() {
+                            hasAirConditioning = value;
+                          });
+                        },
+                        activeColor: const Color(0xFF003AA7),
+                      ),
+                      const Text("No"),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Número de placa
+                  TextField(
+                    controller: plateController,
+                    decoration: const InputDecoration(
+                      labelText: "Número de placa",
                       labelStyle: TextStyle(color: Colors.black),
                       enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF003AA7), width: 1), // Línea cuando no está seleccionado
+                        borderSide: BorderSide(color: Color(0xFF003AA7)),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF003AA7), width: 1),
+                        borderSide: BorderSide(color: Color(0xFF003AA7)),
+                      ),
                     ),
                   ),
-                  ),
                   const SizedBox(height: 20),
+                  // Subir licencia o carnet
                   const Text(
-                    "Adjunte una fotografía de su licencia de conducir o carnet de circulación",
+                    "Adjunte una fotografía de su licencia o carnet de circulación:",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Aquí puedes agregar funcionalidad para cargar imágenes
-                  },
-                  icon: const Icon(
-                    Icons.upload,
-                    color: Color(0xFF003AA7), // Color del icono
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        uploadedLicense = "Archivo subido correctamente";
+                      });
+                    },
+                    child: const Text("Subir archivo"),
                   ),
-                  label: const Text(
-                    "Cargar imagen",
-                    style: TextStyle(color: Color(0xFF003AA7)), // Color del texto
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // Color de fondo del botón
-                    foregroundColor: Color(0xFF003AA7), // Color del texto y el icono
-                    side: BorderSide(color: Color(0xFF003AA7)), // Borde del botón
-                  ),
-                ),
+                  if (uploadedLicense != null)
+                    Text(
+                      uploadedLicense!,
+                      style: const TextStyle(color: Colors.green),
+                    ),
                   const SizedBox(height: 20),
-                    Row(
+                  // Términos y condiciones
+                  Row(
                     children: [
                       Checkbox(
                         value: termsAccepted,
@@ -317,36 +258,57 @@ class _RegisterPageState extends State<RegisterPage> {
                             termsAccepted = value ?? false;
                           });
                         },
-                        activeColor: Color(0xFF003AA7), // Color cuando está marcado
-                        checkColor: Color(0xFFFFD900), // Color del icono dentro del cuadro
-                        side: BorderSide(color: Color(0xFF003AA7)), // Borde del cuadro
+                        activeColor: const Color(0xFF003AA7),
                       ),
                       const Expanded(
-                        child: Text("Acepto términos y condiciones"),
+                        child: Text("Acepto los términos y condiciones"),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            // Botón fuera del formulario
-            const SizedBox(height: 20), // Espacio entre el formulario y el botón
+            const SizedBox(height: 20),
+            // Botón "Continuar"
             Center(
               child: ElevatedButton(
-                onPressed: termsAccepted
-                    ? () {
-                        // Aquí puedes manejar la acción del botón "Continuar"
-                      }
-                    : null,
+                onPressed: _validateForm() ? _onSubmit : null,
                 child: const Text("Continuar"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF003AA7),
-                  foregroundColor: Color(0xFFFAFAFA),
-                  disabledBackgroundColor: Color(0xFF6D8DC7),
+                  backgroundColor: const Color(0xFF003AA7),
+                  foregroundColor: const Color(0xFFFAFAFA),
+                  disabledBackgroundColor: const Color(0xFF6D8DC7),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDoorOption(String option) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          doorCount = option;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        decoration: BoxDecoration(
+          color: doorCount == option
+              ? const Color(0xFF003AA7)
+              : Colors.transparent,
+          border: Border.all(color: const Color(0xFF003AA7)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          option,
+          style: TextStyle(
+            color: doorCount == option ? Colors.white : const Color(0xFF003AA7),
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -365,7 +327,22 @@ class _RegisterPageState extends State<RegisterPage> {
       case "two_wheeler":
         return Icons.two_wheeler;
       default:
-        return Icons.directions_car;
+        return Icons.help;
     }
+  }
+
+  bool _validateForm() {
+    return selectedVehicle != null &&
+        selectedYear != null &&
+        tintedWindows != null &&
+        hasAirConditioning != null &&
+        doorCount != null &&
+        plateController.text.isNotEmpty &&
+        termsAccepted &&
+        uploadedLicense != null;
+  }
+
+  void _onSubmit() {
+    print("Formulario completado correctamente.");
   }
 }

@@ -129,24 +129,25 @@ class _LoginPageState extends State<LoginPage> {
                       final password = _passwordController.text.trim();
 
                       final success = await _authService.loginUser(
-                          email:email,
-                          password:password
-                      );
+                          email: email, password: password);
 
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Inicio Exitoso")),
                         );
-                        Navigator.pushNamed(context, '/home');
+                        Navigator.pushNamed(context, '/mainMapa');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Correo o Contraseñas incorrectos')),
+                          SnackBar(
+                              content:
+                                  Text('Correo o Contraseñas incorrectos')),
                         );
                       }
                     },
                     child: Container(
                       width: 200, // Set the desired width
-                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                       decoration: BoxDecoration(
                         color: Color(0xFFFFD900),
                         borderRadius: BorderRadius.circular(30),
