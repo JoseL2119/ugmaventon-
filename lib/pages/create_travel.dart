@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:ugmaventon/pages/mapatest.dart'; // Tu archivo con el mapa
 
 class CreateTravel extends StatefulWidget {
   const CreateTravel({Key? key}) : super(key: key);
@@ -22,12 +22,12 @@ class _CreateTravelPageState extends State<CreateTravel> {
         return Theme(
           data: ThemeData.light().copyWith(
             colorScheme: ColorScheme.light(
-              primary: const Color(0xFF6D8DC7), // Color principal del TimePicker (fondo del header)
-              surface: Color(0xFAFAFAFA), // Color del texto del TimePicker (color del texto del header)
-              onPrimary: Color(0xFAFAFAFA), // Color del fondo del selector
-              onSurface: Colors.black, // Color del texto del selector
+              primary: const Color(0xFF6D8DC7),
+              surface: Color(0xFAFAFAFA),
+              onPrimary: Color(0xFAFAFAFA),
+              onSurface: Colors.black,
             ),
-            dialogBackgroundColor: Colors.white, // Fondo del diálogo
+            dialogBackgroundColor: Colors.white,
           ),
           child: child!,
         );
@@ -64,7 +64,10 @@ class _CreateTravelPageState extends State<CreateTravel> {
       backgroundColor: const Color(0xFFFFD900),
       appBar: AppBar(
         title: const Center(
-          child: Text("Crear Aventón", style: TextStyle(color: Color(0xFFFFD900))),
+          child: Text(
+            "Crear Aventón",
+            style: TextStyle(color: Color(0xFFFFD900)),
+          ),
         ),
         backgroundColor: const Color(0xFF003AA7),
       ),
@@ -79,7 +82,8 @@ class _CreateTravelPageState extends State<CreateTravel> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20.0),
                 boxShadow: const [
-                  BoxShadow(color: Colors.grey, blurRadius: 5.0, spreadRadius: 2.0)
+                  BoxShadow(
+                      color: Colors.grey, blurRadius: 5.0, spreadRadius: 2.0)
                 ],
               ),
               child: Column(
@@ -87,9 +91,11 @@ class _CreateTravelPageState extends State<CreateTravel> {
                 children: <Widget>[
                   Text(
                     'PUNTO DE PARTIDA',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF6D8DC7)),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF6D8DC7)),
                   ),
-
                   Row(
                     children: [
                       Expanded(
@@ -110,119 +116,134 @@ class _CreateTravelPageState extends State<CreateTravel> {
                       ),
                     ],
                   ),
-
                   Divider(
                     color: const Color(0xFF6D8DC7),
-                    thickness: 4, 
-                    indent: 0, 
+                    thickness: 4,
+                    indent: 0,
                     endIndent: 0,
                   ),
-
                   Text(
                     'RUTA',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF6D8DC7)),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF6D8DC7)),
                   ),
-
                   SizedBox(height: 20),
-
-
-
-                  
-
-
-
+                  // Coloca el widget del mapa pequeño aquí
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Container(
+                      width: double.infinity, // Ajusta el ancho
+                      height: 250, // Puedes ajustar el alto si es necesario
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child:
+                            MainPageExample(), // Aquí es donde se incluye el mapa
+                      ),
+                    ),
+                  ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/mainMapa');
+                    },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xFFFAFAFA), // Color del texto
-                      backgroundColor: const Color(0xFF003AA7), // Color de fondo
+                      foregroundColor:
+                          const Color(0xFFFAFAFA), // Color del texto
+                      backgroundColor:
+                          const Color(0xFF003AA7), // Color de fondo
                       disabledBackgroundColor: const Color(0xFF6D8DC7),
                     ),
                     child: Text('INDICAR RUTA'),
                   ),
-
                   SizedBox(height: 20),
-
                   Divider(
                     color: const Color(0xFF6D8DC7),
-                    thickness: 4, 
-                    indent: 0, 
+                    thickness: 4,
+                    indent: 0,
                     endIndent: 0,
                   ),
-
                   Text(
                     'HORA DE SALIDA',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF6D8DC7)),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF6D8DC7)),
                   ),
-
                   Text(
                     _selectedTime != null
                         ? '${_selectedTime!.format(context)}'
                         : 'NO DEFINIDA',
                     style: TextStyle(fontSize: 24),
                   ),
-
                   SizedBox(height: 10),
-
                   ElevatedButton(
                     onPressed: _pickTime,
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xFFFAFAFA), // Color del texto
-                      backgroundColor: const Color(0xFF003AA7), // Color de fondo
+                      foregroundColor:
+                          const Color(0xFFFAFAFA), // Color del texto
+                      backgroundColor:
+                          const Color(0xFF003AA7), // Color de fondo
                       disabledBackgroundColor: const Color(0xFF6D8DC7),
                     ),
                     child: Text('INDICAR HORA'),
                   ),
-
                   SizedBox(height: 20),
-
                   Divider(
                     color: const Color(0xFF6D8DC7),
-                    thickness: 4, 
-                    indent: 0, 
-                    endIndent: 0,
-                  ),
-
-                  Text(
-                    'REFERENCIAS',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF6D8DC7)),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  ElevatedButton(
-                    onPressed: _showReferenceSelection,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xFFFAFAFA), // Color del texto
-                      backgroundColor: const Color(0xFF003AA7), // Color de fondo
-                      disabledBackgroundColor: const Color(0xFF6D8DC7),
-                    ),
-                    child: Text('Puntos de referencia'),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  Text(
-                    '${_selectedReferences.join(', ')}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  Divider(
-                    color: const Color(0xFF6D8DC7), 
                     thickness: 4,
                     indent: 0,
                     endIndent: 0,
                   ),
-
+                  Text(
+                    'REFERENCIAS',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF6D8DC7)),
+                  ),
                   SizedBox(height: 20),
-
+                  ElevatedButton(
+                    onPressed: _showReferenceSelection,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor:
+                          const Color(0xFFFAFAFA), // Color del texto
+                      backgroundColor:
+                          const Color(0xFF003AA7), // Color de fondo
+                      disabledBackgroundColor: const Color(0xFF6D8DC7),
+                    ),
+                    child: Text('Puntos de referencia'),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    '${_selectedReferences.join(', ')}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(height: 20),
+                  Divider(
+                    color: const Color(0xFF6D8DC7),
+                    thickness: 4,
+                    indent: 0,
+                    endIndent: 0,
+                  ),
+                  SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xFFFAFAFA), // Color del texto
-                      backgroundColor: const Color(0xFF003AA7), // Color de fondo
+                      foregroundColor:
+                          const Color(0xFFFAFAFA), // Color del texto
+                      backgroundColor:
+                          const Color(0xFF003AA7), // Color de fondo
                       disabledBackgroundColor: const Color(0xFF6D8DC7),
                     ),
                     child: Text('PUBLICAR AVENTÓN'),
@@ -231,7 +252,6 @@ class _CreateTravelPageState extends State<CreateTravel> {
               ),
             ),
             const SizedBox(height: 20),
-            // Botón "Continuar"
           ],
         ),
       ),
@@ -245,7 +265,8 @@ class ReferenceSelectionWidget extends StatefulWidget {
   ReferenceSelectionWidget({required this.selectedReferences});
 
   @override
-  _ReferenceSelectionWidgetState createState() => _ReferenceSelectionWidgetState();
+  _ReferenceSelectionWidgetState createState() =>
+      _ReferenceSelectionWidgetState();
 }
 
 class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
@@ -305,4 +326,6 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
           ),
         ],
       ),
-    );}}
+    );
+  }
+}

@@ -7,6 +7,7 @@ class MainPageExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false, // Desactiva el banner de debug
       home: Scaffold(body: Main()),
     );
   }
@@ -52,11 +53,13 @@ class _MainState extends State<Main> with OSMMixinObserver {
       children: [
         Center(
           child: Container(
-            width: 300, // Ancho del cuadro del mapa
-            height: 300, // Alto del cuadro del mapa
+            width: 330, // Ancho del cuadro del mapa
+            height: 250, // Alto del cuadro del mapa
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue, width: 2), // Borde opcional
-              borderRadius: BorderRadius.circular(12), // Esquinas redondeadas opcionales
+              border:
+                  Border.all(color: Colors.blue, width: 2), // Borde opcional
+              borderRadius:
+                  BorderRadius.circular(12), // Esquinas redondeadas opcionales
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -65,27 +68,7 @@ class _MainState extends State<Main> with OSMMixinObserver {
               ),
             ),
           ),
-        ),
-        Positioned(
-          bottom: 20,
-          left: 20,
-          child: FloatingActionButton(
-            onPressed: () async {
-              await controller.zoomIn();
-            },
-            child: const Icon(Icons.add),
-          ),
-        ),
-        Positioned(
-          bottom: 20,
-          right: 20,
-          child: FloatingActionButton(
-            onPressed: () async {
-              await controller.zoomOut();
-            },
-            child: const Icon(Icons.remove),
-          ),
-        ),
+        )
       ],
     );
   }
