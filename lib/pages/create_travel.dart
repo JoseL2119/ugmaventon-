@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:ugmaventon/pages/mapatest.dart'; // Tu archivo con el mapa
 
-import 'Mapa/src/my_globals.dart'; // ACA SE GUARDA geos :D
+import 'my_globals.dart'; // ACA SE GUARDA geos :D
 
 class CreateTravel extends StatefulWidget {
   const CreateTravel({Key? key}) : super(key: key);
@@ -12,10 +11,6 @@ class CreateTravel extends StatefulWidget {
 }
 
 class _CreateTravelPageState extends State<CreateTravel> {
-   //Esta es la lista de posiciones de los marcadores de la ruta dada por el conductor
-  List<GeoPoint>? userPos = geos;
-  print(userPos)
-  
   TimeOfDay? _selectedTime;
   List<String> _selectedReferences = [];
 
@@ -66,7 +61,6 @@ class _CreateTravelPageState extends State<CreateTravel> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.userPos);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xFFFFD900),
@@ -246,7 +240,23 @@ class _CreateTravelPageState extends State<CreateTravel> {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Aquí puedes hacer algo con userPos
+                      //print(geos);
+                      if (geos.length >= 2) {
+                        String geoString = geos
+                            .map((geo) =>
+                                'Lat: ${geo.latitude}, Lon: ${geo.longitude}')
+                            .join(', ');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(geoString),
+                            duration:
+                                Duration(seconds: 2), // Duración del mensaje
+                          ),
+                        );
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       foregroundColor:
                           const Color(0xFFFAFAFA), // Color del texto
