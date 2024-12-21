@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
-class MainPageExample extends StatelessWidget {
-  const MainPageExample({super.key});
+class MainMapaTest extends StatelessWidget {
+  const MainMapaTest({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false, // Desactiva el banner de debug
-      home: Scaffold(body: Main()),
-    );
+    return Scaffold(body: Main());
   }
 }
 

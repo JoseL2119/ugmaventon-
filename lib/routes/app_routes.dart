@@ -8,7 +8,6 @@ import '../pages/mapatest.dart'; // testing
 
 import '../Mapa/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
 
-
 class AppRoutes {
   static const initialRoute = '/create_travel';
 
@@ -17,7 +16,7 @@ class AppRoutes {
       case '/login':
         return MaterialPageRoute(builder: (context) => const LoginPage());
       case '/create_travel':
-        return MaterialPageRoute(builder: (context) => const CreateTravel());
+        return MaterialPageRoute(builder: (context) => CreateTravel());
       case '/register':
         return MaterialPageRoute(builder: (context) => const RegisterPage());
       case '/type_register':
@@ -30,7 +29,7 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) => const MyApp_Mapa());
 
       case '/mapatest':
-        return MaterialPageRoute(builder: (context) => const MainPageExample());
+        return MaterialPageRoute(builder: (context) => const MainMapaTest());
 
       default:
         return MaterialPageRoute(

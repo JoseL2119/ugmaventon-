@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
+import 'package:ugmaventon/pages/create_travel.dart';
 
 class MainPageExample extends StatelessWidget {
   const MainPageExample({super.key});
@@ -174,6 +175,17 @@ class _MainState extends State<Main> with OSMMixinObserver {
             ),
           )
         ],
+        Positioned(
+          child: FloatingActionButton.extended(
+              onPressed: () {
+                //Si hay dos o mas marcadores puestos, retorna a la pantalla anterior y mandale los marcadores
+                if (geos.length >= 2) {
+                  //this no work i dont get it
+                  MaterialPageRoute(builder: (context) => CreateTravel());
+                }
+              },
+              label: Text("CONFIRMAR RUTA")),
+        ),
         Positioned.fill(
           child: ValueListenableBuilder(
             valueListenable: showFab,
