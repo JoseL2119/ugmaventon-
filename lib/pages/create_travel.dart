@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:ugmaventon/pages/mapatest.dart'; // Tu archivo con el mapa
 
-class CreateTravel extends StatefulWidget {
-  //Esta es la lista de posiciones de los marcadores de la ruta dada por el conductor
-  List<GeoPoint>? userPos = [];
+import 'Mapa/src/my_globals.dart'; // ACA SE GUARDA geos :D
 
-  CreateTravel({super.key, this.userPos});
+class CreateTravel extends StatefulWidget {
+  const CreateTravel({Key? key}) : super(key: key);
 
   @override
   State<CreateTravel> createState() => _CreateTravelPageState();
 }
 
 class _CreateTravelPageState extends State<CreateTravel> {
+   //Esta es la lista de posiciones de los marcadores de la ruta dada por el conductor
+  List<GeoPoint>? userPos = geos;
+  print(userPos)
+  
   TimeOfDay? _selectedTime;
   List<String> _selectedReferences = [];
 

@@ -6,7 +6,7 @@ import '../pages/register_passenger.dart'; // Importamos la pantalla de pasajero
 import '../pages/create_travel.dart'; // Importamos la pantalla de crear aventones
 import '../pages/mapatest.dart'; // testing
 
-import '../Mapa/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
+import '../pages/Mapa/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
 
 class AppRoutes {
   static const initialRoute = '/create_travel';
