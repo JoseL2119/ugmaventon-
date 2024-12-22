@@ -71,7 +71,6 @@ class _MainState extends State<Main> with OSMMixinObserver {
   ValueNotifier<bool> disableMapControlUserTracking = ValueNotifier(true);
   ValueNotifier<IconData> userLocationIcon = ValueNotifier(Icons.near_me);
   ValueNotifier<GeoPoint?> lastGeoPoint = ValueNotifier(null);
-  //List<GeoPoint> geos = [];
   ValueNotifier<GeoPoint?> userLocationNotifier = ValueNotifier(null);
   final mapKey = GlobalKey();
 
@@ -88,7 +87,9 @@ class _MainState extends State<Main> with OSMMixinObserver {
       // ),
       useExternalTracking: disableMapControlUserTracking.value,
     );
-    controller.addObserver(this);
+    controller.addObserver(
+        this); // Si la lista geos no está vacía, agregar los marcadores existentes al mapa
+
     trackingNotifier.addListener(() async {
       if (userLocationNotifier.value != null && !trackingNotifier.value) {
         await controller.removeMarker(userLocationNotifier.value!);
@@ -101,6 +102,33 @@ class _MainState extends State<Main> with OSMMixinObserver {
   Future<void> mapIsReady(bool isReady) async {
     if (isReady) {
       showFab.value = true;
+      _loadGeosOnMap();
+    }
+  }
+
+  Future<void> _loadGeosOnMap() async {
+    // Asegúrate de que los puntos sean válidos
+    for (var geo in geos) {
+      if (geo.latitude != null && geo.longitude != null) {
+        await controller.addMarker(
+          geo,
+          markerIcon: const MarkerIcon(
+            icon: Icon(Icons.location_on, color: Colors.red, size: 32),
+          ),
+        );
+      }
+    }
+
+    // Dibujar rutas si hay más de un punto
+    if (geos.length > 1) {
+      for (int i = 0; i < geos.length - 1; i++) {
+        await controller.drawRoad(
+          geos[i],
+          geos[i + 1],
+          roadType: RoadType.car,
+          roadOption: const RoadOption(roadColor: Colors.blueAccent),
+        );
+      }
     }
   }
 

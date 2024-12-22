@@ -252,7 +252,7 @@ class _CreateTravelPageState extends State<CreateTravel> {
                           SnackBar(
                             content: Text(geoString),
                             duration:
-                                Duration(seconds: 2), // Duración del mensaje
+                                Duration(seconds: 3), // Duración del mensaje
                           ),
                         );
                       }
