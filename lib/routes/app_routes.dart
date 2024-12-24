@@ -5,6 +5,7 @@ import '../pages/type_register.dart'; // Importamos la pantalla de selección
 import '../pages/register_passenger.dart'; // Importamos la pantalla de pasajeros
 import '../pages/create_travel.dart'; // Importamos la pantalla de crear aventones
 import '../pages/mapatest.dart'; // testing
+import '../pages/Elegir_Aventon.dart'; // testing
 
 import '../pages/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
 
@@ -15,6 +16,8 @@ class AppRoutes {
     switch (settings.name) {
       case '/login':
         return MaterialPageRoute(builder: (context) => const LoginPage());
+      case '/Select_Travel':
+        return MaterialPageRoute(builder: (context) => Select_Travel());
       case '/create_travel':
         return MaterialPageRoute(builder: (context) => CreateTravel());
       case '/register':
