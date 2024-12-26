@@ -12,10 +12,13 @@ class CreateTravel extends StatefulWidget {
   State<CreateTravel> createState() => _CreateTravelPageState();
 }
 
-class _CreateTravelPageState extends State<CreateTravel> {
-  TimeOfDay? _selectedTime;
-  List<String> _selectedReferences = [];
+TimeOfDay? _selectedTime;
+List<String> _selectedReferences = [];
+// Variable para almacenar el valor seleccionado
+String? puntoPartida = '';
+String? Correo = '0@gmail.com';
 
+class _CreateTravelPageState extends State<CreateTravel> {
   void _pickTime() async {
     final TimeOfDay? picked = await showTimePicker(
       cancelText: 'Regresar',
@@ -106,16 +109,26 @@ class _CreateTravelPageState extends State<CreateTravel> {
                         child: RadioListTile(
                           title: Text('UGMA'),
                           value: 'ugma',
-                          groupValue: 'puntoPartida',
-                          onChanged: (value) {},
+                          groupValue: puntoPartida,
+                          onChanged: (value) {
+                            setState(() {
+                              puntoPartida =
+                                  value; // Actualizamos el valor cuando se selecciona
+                            });
+                          },
                         ),
                       ),
                       Expanded(
                         child: RadioListTile(
                           title: Text('Otro'),
                           value: 'otro',
-                          groupValue: 'puntoPartida',
-                          onChanged: (value) {},
+                          groupValue: puntoPartida,
+                          onChanged: (value) {
+                            setState(() {
+                              puntoPartida =
+                                  value; // Actualizamos el valor cuando se selecciona
+                            });
+                          },
                         ),
                       ),
                     ],
@@ -250,13 +263,14 @@ class _CreateTravelPageState extends State<CreateTravel> {
                             .map((geo) =>
                                 'Lat: ${geo.latitude}, Lon: ${geo.longitude}')
                             .join(', ');
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        /*ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(geoString),
                             duration:
                                 Duration(seconds: 3), // Duración del mensaje
                           ),
-                        );
+                        );*/
+                        actualizarDatosConductor(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -350,21 +364,68 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
   }
 }
 
-void actualizarDatosConductor(String correo) async {
+// Definir la función fuera del cuerpo de la clase para convertir la hora a String
+String formatTimeOfDay(TimeOfDay time) {
+  final now = DateTime.now();
+  final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+  return "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+}
+
+void actualizarDatosConductor(BuildContext context) async {
   // Obtén una referencia a la colección de conductores
   CollectionReference drivers =
-      FirebaseFirestore.instance.collection('Drivers');
+      FirebaseFirestore.instance.collection('drivers');
+
+  String geoString = geos
+      .map((geo) => 'Lat: ${geo.latitude}, Lon: ${geo.longitude}')
+      .join(', ');
+
+  // Formatea la hora de salida a String
+  String horaSalida =
+      _selectedTime != null ? formatTimeOfDay(_selectedTime!) : 'No definida';
 
   try {
-    // Actualiza el documento del conductor con los campos específicos
-    await drivers.doc(correo).update({
-      'Punto_Partida': '',
-      'Ruta': geos,
-      'Hora_Salida': null,
-      'Referencias': '',
-    });
-    SnackBar(content: Text("Datos actualizados exitosamente."));
+    // Realizar una consulta para encontrar el conductor por correo
+    QuerySnapshot querySnapshot = await drivers
+        .where('email',
+            isEqualTo: Correo) // Campo 'correo' con el valor proporcionado
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Si encontramos el conductor, obtenemos el primer documento (en caso de que haya más de uno)
+      DocumentSnapshot driverSnapshot = querySnapshot.docs.first;
+
+      // Actualizar los datos del conductor
+      await drivers.doc(driverSnapshot.id).update({
+        'Punto_Partida': puntoPartida,
+        'Ruta': geoString,
+        'Hora_Salida': horaSalida,
+        'Referencias': _selectedReferences,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Datos actualizados exitosamente."),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    } else {
+      // Si no se encuentra el conductor, muestra un mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("El conductor no existe en la base de datos."),
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
   } catch (e) {
-    SnackBar(content: Text("Error al actualizar los datos: $e"));
+    // Capturar cualquier error durante la operación
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Error al actualizar los datos: $e"),
+        duration: Duration(seconds: 3),
+      ),
+    );
+    debugPrint("Error al actualizar los datos: $e");
   }
 }
