@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:ugmaventon/pages/mapatest.dart'; // Tu archivo con el mapa
 
 import 'my_globals.dart'; // ACA SE GUARDA geos :D
@@ -345,5 +347,24 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
         ],
       ),
     );
+  }
+}
+
+void actualizarDatosConductor(String correo) async {
+  // Obtén una referencia a la colección de conductores
+  CollectionReference drivers =
+      FirebaseFirestore.instance.collection('Drivers');
+
+  try {
+    // Actualiza el documento del conductor con los campos específicos
+    await drivers.doc(correo).update({
+      'Punto_Partida': '',
+      'Ruta': geos,
+      'Hora_Salida': null,
+      'Referencias': '',
+    });
+    SnackBar(content: Text("Datos actualizados exitosamente."));
+  } catch (e) {
+    SnackBar(content: Text("Error al actualizar los datos: $e"));
   }
 }
