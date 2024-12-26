@@ -40,3 +40,5 @@ NOTA 2: La base de datos firestore trabaja por colecciones, las colecciones actu
 - travels: almacena los viajes
 
 No se requieren datos especificos para registrarse, pueden incluir los datos que creen convenientes
+
+se agrego un .dart para registrar conductores de momento en la rama mapa+login.
