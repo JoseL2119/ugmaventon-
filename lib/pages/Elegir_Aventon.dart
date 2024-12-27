@@ -136,7 +136,7 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                     data['Referencias'] == null ||
                     (data['Referencias'] is List &&
                         (data['Referencias'] as List).isEmpty) ||
-                    data['N_Puertas'] == null ||
+                    data['N_Asientos'] == null ||
                     data['Hora_Salida'] == null ||
                     data['Hora_Salida'].isEmpty) {
                   return Container();
@@ -151,6 +151,13 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                       data['Referencias']?.toString() ?? 'Desconocido';
                 }
 
+                // Intercambiar Punto de Partida y Referencias si Punto de Partida es 'Otro'
+                String puntoPartida = data['Punto_Partida'];
+                if (puntoPartida.toLowerCase() == 'otro') {
+                  puntoPartida = referencias;
+                  referencias = 'UGMA';
+                }
+
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 8.0),
                   child: Padding(
@@ -163,7 +170,7 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              data['Punto_Partida'],
+                              puntoPartida,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -175,7 +182,7 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                           children: [
                             Icon(Icons.arrow_forward, size: 24.0),
                             SizedBox(height: 4.0),
-                            Text('Asientos: ${data['N_Puertas']}'),
+                            Text('Asientos: ${data['N_Asientos']}'),
                             Text('Salida: ${data['Hora_Salida']}'),
                           ],
                         ),

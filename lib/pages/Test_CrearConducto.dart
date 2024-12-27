@@ -36,6 +36,8 @@ class _ConductorFormState extends State<ConductorForm> {
   final TextEditingController nAsientosController = TextEditingController();
   final TextEditingController nPuertasController = TextEditingController();
   final TextEditingController placaController = TextEditingController();
+  final TextEditingController telefonoController =
+      TextEditingController(); // Nuevo controlador para el teléfono
 
   bool vidrioAhumado = false;
   bool aire = false;
@@ -135,6 +137,12 @@ class _ConductorFormState extends State<ConductorForm> {
                 controller: placaController,
                 decoration: InputDecoration(labelText: 'Placa del Auto'),
               ),
+              TextField(
+                controller:
+                    telefonoController, // Nuevo campo para el número de teléfono
+                decoration: InputDecoration(labelText: 'Número de Teléfono'),
+                keyboardType: TextInputType.phone,
+              ),
               ElevatedButton(
                 onPressed: () async {
                   await _agregarConductor();
@@ -158,6 +166,7 @@ class _ConductorFormState extends State<ConductorForm> {
     final nAsientos = int.tryParse(nAsientosController.text) ?? 0;
     final nPuertas = int.tryParse(nPuertasController.text) ?? 0;
     final placa = placaController.text;
+    final telefono = telefonoController.text; // Recoger el número de teléfono
 
     // Aquí dejamos los campos vacíos o predeterminados
     final conductorData = {
@@ -172,6 +181,7 @@ class _ConductorFormState extends State<ConductorForm> {
       'Vidrio_Ahumado': vidrioAhumado,
       'Aire': aire,
       'Placa': placa,
+      'Telefono': telefono, // Añadir el número de teléfono al objeto
       'FotoID':
           'url_a_foto_id', // Aquí puedes agregar un URL de Firebase Storage si es necesario
       'Punto_Partida': '', // Deja este campo vacío

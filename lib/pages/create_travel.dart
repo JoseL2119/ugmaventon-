@@ -16,7 +16,6 @@ TimeOfDay? _selectedTime;
 List<String> _selectedReferences = [];
 // Variable para almacenar el valor seleccionado
 String? puntoPartida = '';
-String? Correo = '0@gmail.com';
 
 class _CreateTravelPageState extends State<CreateTravel> {
   void _pickTime() async {
@@ -370,6 +369,9 @@ String formatTimeOfDay(TimeOfDay time) {
   final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
   return "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
 }
+
+//String? Correo = '0@gmail.com'; // DON PANCHO
+String? Correo = 'Nazi@gmail.com';
 
 void actualizarDatosConductor(BuildContext context) async {
   if ((puntoPartida?.isEmpty ?? true) ||
