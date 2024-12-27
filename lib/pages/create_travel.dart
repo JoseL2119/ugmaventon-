@@ -372,6 +372,21 @@ String formatTimeOfDay(TimeOfDay time) {
 }
 
 void actualizarDatosConductor(BuildContext context) async {
+  if ((puntoPartida?.isEmpty ?? true) ||
+      (geos?.isEmpty ?? true) ||
+      _selectedTime == null ||
+      (_selectedReferences?.isEmpty ?? true) ||
+      (Correo?.isEmpty ?? true)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            "Por favor, asegúrate de que todos los campos estén completos."),
+        duration: Duration(seconds: 3),
+      ),
+    );
+    return;
+  }
+
   // Obtén una referencia a la colección de conductores
   CollectionReference drivers =
       FirebaseFirestore.instance.collection('drivers');
