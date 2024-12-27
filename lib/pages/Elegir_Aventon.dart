@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Select_Travel extends StatefulWidget {
@@ -27,7 +28,11 @@ class ChooseRideScreen extends StatefulWidget {
 }
 
 class _ChooseRideScreenState extends State<ChooseRideScreen> {
+  final Stream<QuerySnapshot> _driversStream =
+      FirebaseFirestore.instance.collection('drivers').snapshots();
   List<String> _selectedReferences = [];
+  List<DocumentSnapshot> _filteredDrivers = [];
+  bool _isInUGMA = false;
 
   void _showReferenceDialog() async {
     final List<String>? results = await showDialog<List<String>>(
@@ -46,8 +51,44 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
     if (results != null) {
       setState(() {
         _selectedReferences = results;
+        _filterDrivers();
       });
     }
+  }
+
+  void _filterDrivers() {
+    FirebaseFirestore.instance
+        .collection('drivers')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      setState(() {
+        _filteredDrivers =
+            querySnapshot.docs.where((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+
+          if (_isInUGMA && data['Punto_Partida'] != 'ugma') {
+            return false;
+          }
+
+          if (_selectedReferences.isEmpty) {
+            return true;
+          }
+
+          if (_selectedReferences.contains('Otros')) {
+            return true;
+          }
+
+          if (data['Referencias'] is List) {
+            List<dynamic> referenciasList = data['Referencias'];
+            return referenciasList
+                .any((ref) => _selectedReferences.contains(ref));
+          } else if (data['Referencias'] is String) {
+            return _selectedReferences.contains(data['Referencias']);
+          }
+          return false;
+        }).toList();
+      });
+    });
   }
 
   @override
@@ -60,95 +101,103 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
         ),
         backgroundColor: Colors.blue,
       ),
-      body: Container(
-        color: Colors.lightBlue[50],
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Checkbox(
-                  value: false,
-                  onChanged: (bool? value) {},
-                ),
-                Text('Estoy en la UGMA'),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: _showReferenceDialog,
-                  child: Text('Puntos de referencia'),
-                ),
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5, // Número de elementos de la lista
-                itemBuilder: (context, index) {
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment
-                            .start, // Alineamos los elementos en la parte superior
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Punto de partida',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 4.0),
-                              Text('Asientos: num_seats'),
-                              Text('Salida: hora_salida'),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment
-                                .start, // Alineamos las flechas con los títulos
-                            children: [
-                              Icon(Icons.arrow_forward, size: 24.0),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Punto de llegada',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 4.0),
-                              Text('Asientos: num_seats'),
-                              Text('Salida: hora_salida'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Checkbox(
+                value: _isInUGMA,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _isInUGMA = value ?? false;
+                    _filterDrivers();
+                  });
                 },
               ),
+              Text('Estoy en la UGMA'),
+              Spacer(),
+              ElevatedButton(
+                onPressed: _showReferenceDialog,
+                child: Text('Puntos de referencia'),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filteredDrivers.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = _filteredDrivers[index];
+                Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+
+                // Filtrar documentos con campos incompletos
+                if (data['Punto_Partida'] == null ||
+                    data['Punto_Partida'].isEmpty ||
+                    data['Referencias'] == null ||
+                    (data['Referencias'] is List &&
+                        (data['Referencias'] as List).isEmpty) ||
+                    data['N_Puertas'] == null ||
+                    data['Hora_Salida'] == null ||
+                    data['Hora_Salida'].isEmpty) {
+                  return Container();
+                }
+
+                String referencias;
+                if (data['Referencias'] is List) {
+                  referencias =
+                      (data['Referencias'] as List<dynamic>).join(', ');
+                } else {
+                  referencias =
+                      data['Referencias']?.toString() ?? 'Desconocido';
+                }
+
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data['Punto_Partida'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(Icons.arrow_forward, size: 24.0),
+                            SizedBox(height: 4.0),
+                            Text('Asientos: ${data['N_Puertas']}'),
+                            Text('Salida: ${data['Hora_Salida']}'),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              referencias,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Anterior'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Siguiente'),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
