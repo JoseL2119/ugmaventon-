@@ -198,12 +198,9 @@ class _MainState extends State<Main> with OSMMixinObserver {
         Positioned(
           child: FloatingActionButton.extended(
               onPressed: () {
-                //Si hay dos o mas marcadores puestos, retorna a la pantalla anterior y mandale los marcadores
-                if (geos.length >= 2) {
-                  Navigator.pushNamed(context, '/create_travel');
-                }
+                Navigator.pushNamed(context, '/infotravel');
               },
-              label: Text("CONFIRMAR RUTA")),
+              label: Text("Volver")),
         ),
         Positioned.fill(
           child: ValueListenableBuilder(
@@ -223,23 +220,6 @@ class _MainState extends State<Main> with OSMMixinObserver {
                       ),
                     )
                   ],
-                  Positioned(
-                    bottom: 32,
-                    right: 15,
-                    child: ActivationUserLocation(
-                      controller: controller,
-                      trackingNotifier: trackingNotifier,
-                      userLocation: userLocationNotifier,
-                      userLocationIcon: userLocationIcon,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 92,
-                    right: 15,
-                    child: DirectionRouteLocation(
-                      controller: controller,
-                    ),
-                  ),
                   Positioned(
                     top: kIsWeb ? 26 : topPadding,
                     left: 64,
