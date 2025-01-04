@@ -9,11 +9,10 @@ import '../pages/Elegir_Aventon.dart'; // testing
 
 import '../pages/info_travel.dart'; // testing
 
-
 import '../pages/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
 
 class AppRoutes {
-  static const initialRoute = '/infotravel';
+  static const initialRoute = '/Select_Travel';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {

@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ugmaventon/routes/app_routes.dart';
+import 'my_globals.dart'; // ACA SE GUARDA geos :D
 
 class Select_Travel extends StatefulWidget {
   const Select_Travel({Key? key}) : super(key: key);
@@ -13,6 +15,9 @@ class _Select_TravelPageState extends State<Select_Travel> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      onGenerateRoute:
+          AppRoutes.onGenerateRoute, // Esto lo conecta con AppRoutes
+
       title: 'Elegir Aventón',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -105,7 +110,6 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
         ),
         backgroundColor: const Color(0xFF003AA7),
       ),
-      
       body: Column(
         children: [
           Container(
@@ -118,9 +122,7 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
               borderRadius: BorderRadius.circular(20.0),
               boxShadow: const [
                 BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 5.0,
-                    spreadRadius: 2.0)
+                    color: Colors.grey, blurRadius: 5.0, spreadRadius: 2.0)
               ],
             ),
             child: Column(
@@ -141,16 +143,14 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                     ElevatedButton(
                       onPressed: _showReferenceDialog,
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF6D8DC7),
-                        ),
-                        child: Text(
+                        backgroundColor: const Color(0xFF6D8DC7),
+                      ),
+                      child: Text(
                           style: TextStyle(color: Colors.white),
                           'Puntos referencia'),
-                      ),
+                    ),
                   ],
                 ),
-
-
                 SizedBox(height: 10),
                 Divider(
                   color: const Color(0xFF6D8DC7),
@@ -158,10 +158,8 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                   indent: 0,
                   endIndent: 0,
                 ),
-
                 Expanded(
                   child: ListView.builder(
-                    
                     itemCount: _filteredDrivers.length,
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = _filteredDrivers[index];
@@ -196,60 +194,73 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                         referencias = 'UGMA';
                       }
 
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0),
-                        color: const Color(0xFF003AA7), // Color azul personalizado
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(16.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16.0),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 60,
-                                      height: 60,
-                                      color: Colors.grey[300],
-                                      child: Center(child: Text("Typecar")),
-                                    ),
-                                    SizedBox(width: 8.0),
-                                    Text(
-                                      puntoPartida,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                      return GestureDetector(
+                        onTap: () {
+                          CorreoConductorRuta = data['email'];
+                          Navigator.pushNamed(context, '/infotravel');
+                          /*ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Correo: $CorreoConductorRuta"),
+                              duration: Duration(seconds: 3),
+                            ),
+                          );*/
+                        },
+                        child: Card(
+                          margin: EdgeInsets.symmetric(vertical: 8.0),
+                          color: const Color(
+                              0xFF003AA7), // Color azul personalizado
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(16.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        color: Colors.grey[300],
+                                        child: Center(child: Text("Typecar")),
                                       ),
-                                    ),
-                                    Icon(Icons.arrow_forward, size: 20.0),
-                                    Text(
-                                      referencias,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                      SizedBox(width: 8.0),
+                                      Text(
+                                        puntoPartida,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Icon(Icons.arrow_forward, size: 20.0),
+                                      Text(
+                                        referencias,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 8.0),
-                              Container(
-                                padding: const EdgeInsets.all(4.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.0),
+                                SizedBox(height: 8.0),
+                                Container(
+                                  padding: const EdgeInsets.all(4.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text('Asientos: ${data['N_Asientos']}'),
+                                      Spacer(),
+                                      Text('Salida: ${data['Hora_Salida']}'),
+                                    ],
+                                  ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Text('Asientos: ${data['N_Asientos']}'),
-                                    Spacer(),
-                                    Text('Salida: ${data['Hora_Salida']}'),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
