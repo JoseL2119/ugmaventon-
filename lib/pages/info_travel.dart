@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'my_globals.dart'; // Aquí se guarda geos y CorreoSelecion:D
 import 'package:flutter_osm_interface/flutter_osm_interface.dart' as osm;
@@ -34,6 +37,43 @@ class _InfoTravelPageState extends State<InfoTravel> {
     } catch (e) {
       print("Error al obtener los datos del conductor: $e");
       return {};
+    }
+  }
+
+  void _launchWhatsApp(String phone) async {
+    // Verificar y corregir el formato del número de teléfono
+    if (phone.startsWith('0')) {
+      phone = phone.substring(1);
+    }
+
+    // Asegurarse de que el número tenga el código de país
+    if (!phone.startsWith('+')) {
+      phone = '+58$phone'; // Agregar el código de país para Venezuela (+58)
+    }
+
+    print('Número de teléfono procesado: $phone');
+    final whatsappUrl = Uri.parse("whatsapp://send?phone=$phone");
+    //final whatsappUrl = Uri.parse("https:wa.me/584128286499");
+    print('URL de WhatsApp: $whatsappUrl');
+    try {
+      if (await canLaunchUrl(whatsappUrl)) {
+        await launchUrl(whatsappUrl);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("No se puede abrir WhatsApp."),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error al intentar lanzar WhatsApp: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Ocurrió un error: $e"),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 
@@ -251,7 +291,9 @@ class _InfoTravelPageState extends State<InfoTravel> {
                         endIndent: 0,
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _launchWhatsApp(data['Telefono']);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF003AA7),
                           shape: RoundedRectangleBorder(
