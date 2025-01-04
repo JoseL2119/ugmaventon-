@@ -294,7 +294,10 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
   @override
   void initState() {
     super.initState();
-    _tempSelectedReferences = List.from(widget.selectedReferences);
+    // Activar "Otros" por defecto si no hay ninguna referencia seleccionada
+    _tempSelectedReferences = widget.selectedReferences.isEmpty
+        ? ['Otros']
+        : List.from(widget.selectedReferences);
   }
 
   @override
@@ -320,11 +323,7 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
                 value: isSelected,
                 onChanged: (bool? value) {
                   setState(() {
-                    if (value == true) {
-                      _tempSelectedReferences.add(reference);
-                    } else {
-                      _tempSelectedReferences.remove(reference);
-                    }
+                    _tempSelectedReferences = value == true ? [reference] : [];
                   });
                 },
               );
