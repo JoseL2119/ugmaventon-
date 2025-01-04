@@ -298,6 +298,8 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
     _tempSelectedReferences = widget.selectedReferences.isEmpty
         ? ['Otros']
         : List.from(widget.selectedReferences);
+
+    Navigator.pop(context, _tempSelectedReferences);
   }
 
   @override
