@@ -41,31 +41,16 @@ class _InfoTravelPageState extends State<InfoTravel> {
   }
 
   void _launchWhatsApp(String phone) async {
-    // Verificar y corregir el formato del número de teléfono
-    if (phone.startsWith('0')) {
-      phone = phone.substring(1);
-    }
-
     // Asegurarse de que el número tenga el código de país
-    if (!phone.startsWith('+')) {
-      phone = '+58$phone'; // Agregar el código de país para Venezuela (+58)
+    if (!phone.startsWith('0')) {
+      phone = '58$phone'; // Agregar el código de país para Venezuela (+58)
     }
 
-    print('Número de teléfono procesado: $phone');
-    final whatsappUrl = Uri.parse("whatsapp://send?phone=$phone");
-    //final whatsappUrl = Uri.parse("https:wa.me/584128286499");
-    print('URL de WhatsApp: $whatsappUrl');
+    String whatsappUrl;
+    whatsappUrl = "https://wa.me/$phone"; // new line
+
     try {
-      if (await canLaunchUrl(whatsappUrl)) {
-        await launchUrl(whatsappUrl);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("No se puede abrir WhatsApp."),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
+      await launchUrlString(whatsappUrl);
     } catch (e) {
       print('Error al intentar lanzar WhatsApp: $e');
       ScaffoldMessenger.of(context).showSnackBar(
