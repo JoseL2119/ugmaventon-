@@ -42,6 +42,7 @@ dependencies:
   routing_client_dart: ^0.5.5
   pointer_interceptor: ^0.10.1+2
   flutter_hooks: ^0.20.5
+  url_launcher: ^6.0.9
 
   firebase_core: ^3.8.0
   cloud_firestore: ^5.5.0
