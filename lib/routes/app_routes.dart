@@ -7,10 +7,13 @@ import '../pages/create_travel.dart'; // Importamos la pantalla de crear aventon
 import '../pages/mapatest.dart'; // testing
 import '../pages/Elegir_Aventon.dart'; // testing
 
+import '../pages/info_travel.dart'; // testing
+
+
 import '../pages/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
 
 class AppRoutes {
-  static const initialRoute = '/Select_Travel';
+  static const initialRoute = '/infotravel';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -33,6 +36,9 @@ class AppRoutes {
 
       case '/mapatest':
         return MaterialPageRoute(builder: (context) => const MainMapaTest());
+
+      case '/infotravel':
+        return MaterialPageRoute(builder: (context) => const InfoTravel());
 
       default:
         return MaterialPageRoute(

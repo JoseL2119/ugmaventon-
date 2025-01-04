@@ -94,114 +94,169 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: const Color(0xFFFFD900),
       appBar: AppBar(
-        title: Text(
-          'Elegir Aventón',
-          style: TextStyle(color: Colors.yellow),
+        title: const Center(
+          child: Text(
+            "Elegir Aventón",
+            style: TextStyle(color: Color(0xFFFFD900)),
+          ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: const Color(0xFF003AA7),
       ),
+      
       body: Column(
         children: [
-          Row(
-            children: [
-              Checkbox(
-                value: _isInUGMA,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _isInUGMA = value ?? false;
-                    _filterDrivers();
-                  });
-                },
-              ),
-              Text('Estoy en la UGMA'),
-              Spacer(),
-              ElevatedButton(
-                onPressed: _showReferenceDialog,
-                child: Text('Puntos de referencia'),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredDrivers.length,
-              itemBuilder: (context, index) {
-                DocumentSnapshot document = _filteredDrivers[index];
-                Map<String, dynamic> data =
-                    document.data()! as Map<String, dynamic>;
-
-                // Filtrar documentos con campos incompletos
-                if (data['Punto_Partida'] == null ||
-                    data['Punto_Partida'].isEmpty ||
-                    data['Referencias'] == null ||
-                    (data['Referencias'] is List &&
-                        (data['Referencias'] as List).isEmpty) ||
-                    data['N_Asientos'] == null ||
-                    data['Hora_Salida'] == null ||
-                    data['Hora_Salida'].isEmpty) {
-                  return Container();
-                }
-
-                String referencias;
-                if (data['Referencias'] is List) {
-                  referencias =
-                      (data['Referencias'] as List<dynamic>).join(', ');
-                } else {
-                  referencias =
-                      data['Referencias']?.toString() ?? 'Desconocido';
-                }
-
-                // Intercambiar Punto de Partida y Referencias si Punto de Partida es 'Otro'
-                String puntoPartida = data['Punto_Partida'];
-                if (puntoPartida.toLowerCase() == 'otro') {
-                  puntoPartida = referencias;
-                  referencias = 'UGMA';
-                }
-
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              puntoPartida,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.arrow_forward, size: 24.0),
-                            SizedBox(height: 4.0),
-                            Text('Asientos: ${data['N_Asientos']}'),
-                            Text('Salida: ${data['Hora_Salida']}'),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              referencias,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+          Container(
+            margin: EdgeInsets.all(20.0),
+            height: 700,
+            width: 400,
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 5.0,
+                    spreadRadius: 2.0)
+              ],
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _isInUGMA,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isInUGMA = value ?? false;
+                          _filterDrivers();
+                        });
+                      },
                     ),
+                    Text('En la UGMA'),
+                    Spacer(),
+                    ElevatedButton(
+                      onPressed: _showReferenceDialog,
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF6D8DC7),
+                        ),
+                        child: Text(
+                          style: TextStyle(color: Colors.white),
+                          'Puntos referencia'),
+                      ),
+                  ],
+                ),
+
+
+                SizedBox(height: 10),
+                Divider(
+                  color: const Color(0xFF6D8DC7),
+                  thickness: 4,
+                  indent: 0,
+                  endIndent: 0,
+                ),
+
+                Expanded(
+                  child: ListView.builder(
+                    
+                    itemCount: _filteredDrivers.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot document = _filteredDrivers[index];
+                      Map<String, dynamic> data =
+                          document.data()! as Map<String, dynamic>;
+
+                      // Filtrar documentos con campos incompletos
+                      if (data['Punto_Partida'] == null ||
+                          data['Punto_Partida'].isEmpty ||
+                          data['Referencias'] == null ||
+                          (data['Referencias'] is List &&
+                              (data['Referencias'] as List).isEmpty) ||
+                          data['N_Asientos'] == null ||
+                          data['Hora_Salida'] == null ||
+                          data['Hora_Salida'].isEmpty) {
+                        return Container();
+                      }
+
+                      String referencias;
+                      if (data['Referencias'] is List) {
+                        referencias =
+                            (data['Referencias'] as List<dynamic>).join(', ');
+                      } else {
+                        referencias =
+                            data['Referencias']?.toString() ?? 'Desconocido';
+                      }
+
+                      // Intercambiar Punto de Partida y Referencias si Punto de Partida es 'Otro'
+                      String puntoPartida = data['Punto_Partida'];
+                      if (puntoPartida.toLowerCase() == 'otro') {
+                        puntoPartida = referencias;
+                        referencias = 'UGMA';
+                      }
+
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0),
+                        color: const Color(0xFF003AA7), // Color azul personalizado
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 60,
+                                      height: 60,
+                                      color: Colors.grey[300],
+                                      child: Center(child: Text("Typecar")),
+                                    ),
+                                    SizedBox(width: 8.0),
+                                    Text(
+                                      puntoPartida,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Icon(Icons.arrow_forward, size: 20.0),
+                                    Text(
+                                      referencias,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
+                              Container(
+                                padding: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text('Asientos: ${data['N_Asientos']}'),
+                                    Spacer(),
+                                    Text('Salida: ${data['Hora_Salida']}'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
         ],
