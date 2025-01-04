@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'my_globals.dart'; // Aquí se guarda geos y CorreoSelecion:D
+import 'package:ugmaventon/pages/mapatest.dart'; // Tu archivo con el mapa
 
 class InfoTravel extends StatefulWidget {
   const InfoTravel({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class _InfoTravelPageState extends State<InfoTravel> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Función para obtener los datos del conductor
-  Future<Map<String, dynamic>> _getDriverData(String email) async {
+  Future _getDriverData(String email) async {
     try {
       final querySnapshot = await _firestore
           .collection('drivers')
@@ -38,7 +39,7 @@ class _InfoTravelPageState extends State<InfoTravel> {
   Widget build(BuildContext context) {
     final String userEmail = CorreoConductorRuta; // Usa el correo del conductor
 
-    return FutureBuilder<Map<String, dynamic>>(
+    return FutureBuilder(
       future: _getDriverData(userEmail),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,12 +49,12 @@ class _InfoTravelPageState extends State<InfoTravel> {
           print("Error en el snapshot: ${snapshot.error}");
           return Center(child: Text('Error: ${snapshot.error}'));
         }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        if (!snapshot.hasData || snapshot.data.isEmpty) {
           print("No se encontraron datos para $userEmail");
           return Center(child: Text('No se encontraron datos'));
         }
 
-        final data = snapshot.data!;
+        final data = snapshot.data;
         print("Mostrando datos: $data");
 
         return Scaffold(
@@ -91,7 +92,7 @@ class _InfoTravelPageState extends State<InfoTravel> {
                       Container(
                         height: 240,
                         color: Colors.grey[300],
-                        child: Center(child: Text("Colocar el mapa acá")),
+                        child: Center(child: MainMapaTest()),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
@@ -134,7 +135,36 @@ class _InfoTravelPageState extends State<InfoTravel> {
                       Text("Hora de salida: ${data['Hora_Salida'] ?? 'N/A'}"),
                       Text(
                           "Asientos disponibles: ${data['N_Asientos'] ?? 'N/A'}"),
-                      Text("Aire Acondicionado: ${data['Aire'] ?? 'N/A'}"),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Aire Acondicionado: ",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            WidgetSpan(
+                              child: data['Aire'] == true
+                                  ? Icon(Icons.check, color: Colors.green)
+                                  : Icon(Icons.close, color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Vidrios Ahumados: ",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            WidgetSpan(
+                              child: data['Vidrio_Ahumado'] == true
+                                  ? Icon(Icons.check, color: Colors.green)
+                                  : Icon(Icons.close, color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 20),
                       Divider(
                         color: const Color(0xFF6D8DC7),
