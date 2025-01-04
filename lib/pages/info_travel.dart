@@ -63,13 +63,23 @@ class _InfoTravelPageState extends State<InfoTravel> {
           resizeToAvoidBottomInset: true,
           backgroundColor: const Color(0xFFFFD900),
           appBar: AppBar(
+            automaticallyImplyLeading: false, //NO boton volver
             title: Center(
               child: Text(
-                "${data['Punto_Partida'] ?? 'N/A'} -> ${"UGMA"}",
+                (data['Punto_Partida'] == 'ugma')
+                    ? 'UGMA -> ${data['Referencias']}'
+                    : '${data['Referencias'] ?? 'N/A'} -> UGMA',
                 style: TextStyle(color: Color(0xFFFFD900)),
               ),
             ),
             backgroundColor: const Color(0xFF003AA7),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              color: Color(0xFFFFD900),
+              onPressed: () {
+                Navigator.pushNamed(context, '/Select_Travel');
+              },
+            ),
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
