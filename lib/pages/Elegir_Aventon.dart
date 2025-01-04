@@ -97,25 +97,26 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: const Color(0xFFFFD900),
-      appBar: AppBar(
-        title: const Center(
-          child: Text(
-            "Elegir Aventón",
-            style: TextStyle(color: Color(0xFFFFD900)),
-          ),
+Widget build(BuildContext context) {
+  return Scaffold(
+    resizeToAvoidBottomInset: true,
+    backgroundColor: const Color(0xFFFFD900),
+    appBar: AppBar(
+      title: const Center(
+        child: Text(
+          "Elegir Aventón",
+          style: TextStyle(color: Color(0xFFFFD900)),
         ),
-        backgroundColor: const Color(0xFF003AA7),
       ),
-      body: Column(
+      backgroundColor: const Color(0xFF003AA7),
+    ),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             margin: EdgeInsets.all(20.0),
-            height: 700,
-            width: 400,
             padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -158,7 +159,8 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                   indent: 0,
                   endIndent: 0,
                 ),
-                Expanded(
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.6, // Ajustar la altura según el tamaño de la pantalla
                   child: ListView.builder(
                     itemCount: _filteredDrivers.length,
                     itemBuilder: (context, index) {
@@ -198,17 +200,10 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                         onTap: () {
                           CorreoConductorRuta = data['email'];
                           Navigator.pushNamed(context, '/infotravel');
-                          /*ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Correo: $CorreoConductorRuta"),
-                              duration: Duration(seconds: 3),
-                            ),
-                          );*/
                         },
                         child: Card(
                           margin: EdgeInsets.symmetric(vertical: 8.0),
-                          color: const Color(
-                              0xFF003AA7), // Color azul personalizado
+                          color: const Color(0xFF003AA7),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -272,8 +267,10 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+  
 }
 
 class ReferenceSelectionWidget extends StatefulWidget {
