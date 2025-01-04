@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'my_globals.dart'; // Aquí se guarda geos y CorreoSelecion:D
+import 'package:flutter_osm_interface/flutter_osm_interface.dart' as osm;
 import 'package:ugmaventon/pages/mapatest.dart'; // Tu archivo con el mapa
 
 class InfoTravel extends StatefulWidget {
@@ -28,6 +29,7 @@ class _InfoTravelPageState extends State<InfoTravel> {
 
       final data = querySnapshot.docs.first.data();
       print("Datos obtenidos para $email: $data");
+
       return data;
     } catch (e) {
       print("Error al obtener los datos del conductor: $e");
@@ -92,11 +94,40 @@ class _InfoTravelPageState extends State<InfoTravel> {
                       Container(
                         height: 240,
                         color: Colors.grey[300],
-                        child: Center(child: MainMapaTest()),
+                        child: Center(child: MainMapaTest()), // MAPA PEQUEÑO
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          try {
+                            // Convertir el string almacenado en Firestore a List<GeoPoint>
+                            List<String> geoStringList =
+                                data['Ruta'].split(', ');
+                            geos = [];
+                            for (int i = 0; i < geoStringList.length; i += 2) {
+                              final latStr =
+                                  geoStringList[i].replaceFirst('Lat: ', '');
+                              final lonStr = geoStringList[i + 1]
+                                  .replaceFirst('Lon: ', '');
+                              final lat = double.tryParse(latStr);
+                              final lon = double.tryParse(lonStr);
+                              if (lat == null || lon == null) {
+                                throw FormatException(
+                                    'Invalid double value: Lat: $latStr, Lon: $lonStr');
+                              }
+                              geos.add(
+                                  osm.GeoPoint(latitude: lat, longitude: lon));
+                            }
+                          } catch (e) {
+                            print("Error al procesar la ruta: $e");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text("Error al procesar la ruta: $e")),
+                            );
+                          }
+                          Navigator.pushNamed(context, '/View_Mapa');
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF003AA7),
                           shape: RoundedRectangleBorder(
