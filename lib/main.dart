@@ -31,25 +31,44 @@ class _HomePageState extends State<HomePage> {
   bool _isWaitingForResponse = false;
   final Map<String, List<String>> _faqResponses = {
     "Cuenta": [
-      "¿Cómo crear una cuenta?",
-      "¿Cómo recuperar mi contraseña?",
-      "¿Cómo actualizar mis datos?"
+      "¿Cómo puedo registrarme en UGMAventón?",
+      "¿Cómo puedo recuperar mi contraseña?",
+      "¿Qué necesito para cambiar de una cuenta de pasajero a conductor?",
+      "¿Qué necesito para cambiar de una cuenta de conductor a pasajero?"
     ],
     "Aventón": [
-      "¿Cómo solicitar un aventón?",
-      "¿Cómo ofrecer un aventón?",
-      "¿Cómo ver mi historial de viajes?"
+      "¿Cómo puedo ofertar un aventón?",
+      "¿Cómo puedo aceptar un aventón?",
+      "¿Puedo cancelar una oferta de aventón?",
+      "¿Cómo puedo cancelar un aventón?",
+      "¿Qué hago si mi conductor/pasajero no se presenta?"
     ],
     "Recompensas": [
-      "¿Cómo ver mis puntos acumulados?",
-      "¿Cómo canjear premios?",
-      "¿Cómo ver el ranking de usuarios?"
+      "¿Cómo funcionan las recompensas para un conductor en UGMAventón?",
+      "¿Qué hago si no estoy satisfecho con el servicio?"
     ],
     "Seguridad": [
-      "¿Cuáles son las políticas de seguridad?",
-      "¿Cómo reportar un problema?",
-      "¿Cómo contactar al soporte?"
+      "¿Es seguro usar UGMAventón?",
+      "¿Cómo reporto un problema o comportamiento inapropiado?",
+      "¿Cómo puedo reportar un objeto perdido?"
     ],
+  };
+
+  final Map<String, String> _faqAnswers = {
+    "¿Cómo puedo registrarme en UGMAventón?": "Para registrarte en la aplicación, debes ingresar tu correo y crear una contraseña segura. Una vez verificado el correo, debes proporcionar tu cédula de identidad, el carnet vigente de la universidad y una captura de pantalla de la inscripción del sistema Ternanet, luego sigue las instrucciones para verificar tu identidad y elegir el modo con el que se creará tu cuenta.",
+    "¿Cómo puedo recuperar mi contraseña?": "En caso de haber olvidado la contraseña de tu cuenta debes darle click al enlace del login, el cual te llevará a una pantalla dónde debes ingresar el correo con el cual te registraste. Ya verificada la información proporcionada, te llegará al correo un enlace con el cuál podrás crear una nueva contraseña. ¡Asegúrate de recordarla y que cumpla con los estándares de seguridad!",
+    "¿Qué necesito para cambiar de una cuenta de pasajero a conductor?": "Para cambiar tu cuenta de pasajero a conductor solo es necesario que proporciones tu licencia de conducir y certificado médico. Una vez el equipo de UGMAventón confirme tu información podrás empezar a ofertar viajes. ¡Así de fácil!",
+    "¿Qué necesito para cambiar de una cuenta de conductor a pasajero?": "Para cambiar tu cuenta de conductor a pasajero no es necesario que proporciones información adicional. Una vez creada tu cuenta de conductor puedes pasar de esta a una cuenta de pasajero sin problemas. ¿Qué esperas para comenzar a usar UGMAventón?",
+    "¿Cómo puedo ofertar un aventón?": "Para ofrecer un aventón debes ir a la pantalla de inicio, marcar el punto de origen, el destino y la ruta que tomarás, por último selecciona la hora de salida y listo. Dándole click al botón subir oferta, se publicará la información del aventón a todos los pasajeros cercanos interesados. ¿Qué esperas para empezar a dar aventones?",
+    "¿Cómo puedo aceptar un aventón?": "Las ofertas disponibles aparecerán listadas en la pantalla de inicio, si te interesa un aventón en específico solo debes darle click el botón aceptar oferta, y al conductor se le notificará para que terminen de gestionar el aventón. ¡No te preocupes más por cómo te trasladarás a la universidad!",
+    "¿Puedo cancelar una oferta de aventón?": "Sí, si eres un conductor y por algún motivo debes cancelar el aventón que ofertaste puedes hacerlo, sin embargo, recomendamos hacerlo con al menos 1 hora de anticipación para evitar penalizaciones en tu puntuación. Para cancelar la oferta debes ir a la página principal, darle click a tu aventón ofertado y luego clickear el botón cancelar oferta, te pedirá confirmación, selecciona la opción aceptar y listo, se habrá cancelado tu oferta de aventón.",
+    "¿Cómo puedo cancelar un aventón?": "Si un aventón no te resulta conveniente puedes cancelarlo. Para ello es necesario que te comuniques con el conductor, de modo que este pueda actualizar el número de puestos disponibles en su vehículo. Recuerda hacerlo con anticipación, ese aventón podría ser de gran necesidad para otro estudiante.",
+    "¿Qué hago si mi conductor/pasajero no se presenta?": "Si ha llegado la hora pautada para el aventón y el conductor o pasajero no se presenta pasados 5 minutos, debes ir a  la opción no se presentó en la app. El equipo de UGMAventón revisará la situación.",
+    "¿Cómo funcionan las recompensas para un conductor en UGMAventón?": "En caso que desees recompensar a un conductor por un buen aventón puedes otorgarle puntos positivos una vez finalizado el viaje. Estos puntos se reflejarán en el perfil del conductor, aumentando su credibilidad y confiabilidad. Además, si quieres ir más allá, puedes donar una pequeña ayuda monetaria.",
+    "¿Qué hago si no estoy satisfecho con el servicio?": "Si el aventón no ha ido del todo bien, puedes dejarle sugerencias al conductor una vez finalizado el viaje. Recuerda hacerlas desde el respeto y la cordialidad, UGMAventón se ha creado con la finalidad de integrar a los estudiantes y crear un espacio seguro para estos.",
+    "¿Es seguro usar UGMAventón?": "Sí, todos los usuarios que se registran en la aplicación deben verificar su identidad y proporcionar sus respectivas credenciales universitarias. Además, UGMAventón tiene implementado un sistema de puntuaciones y reportes que facilita el aspecto de credibilidad y confiabilidad entre conductores y pasajeros.",
+    "¿Cómo reporto un problema o comportamiento inapropiado?": "Para reportar un problema o comportamiento inapropiado debes ir al perfil del conductor/pasajero e ir a la sección de reportar un problema, allí describe la situación detalladamente. El equipo de UGMAventón evaluará la situación y tomará acciones de ser necesario.",
+    "¿Cómo puedo reportar un objeto perdido?": "Puedes ponerte en contacto con tu conductor. Si no tienes los datos a mano accede al historial de viajes: En la aplicación, ve a 'Mis Viajes' y selecciona el viaje en el que crees haber perdido el objeto. Si el conductor encuentra tu objeto, te contactará a través de la aplicación para coordinar la devolución.Si después de 48 horas no has recibido respuesta, puedes solicitar ayuda adicional a través de 'Soporte' en el menú principal. Recuerda que es importante reportar objetos perdidos lo antes posible para aumentar las posibilidades de recuperarlos. La aplicación no se hace responsable por objetos perdidos, pero hará todo lo posible para facilitar su recuperación.",
   };
 
   final List<Map<String, dynamic>> _faqButtons = [
@@ -74,6 +93,7 @@ class _HomePageState extends State<HomePage> {
         "isUser": true,
       });
       _messageController.clear();
+      _showMainSection = false;
 
       // Reaparecer la sección principal si el mensaje no corresponde a las opciones del carrusel
       if (!_faqResponses.keys.contains(message) && !_currentCarouselItems.contains(message)) {
@@ -84,14 +104,20 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-
+    // Busca la respuesta asociada
+    String? response = _faqAnswers[message];
 
     // Agregar respuesta automatica
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        if (!_showMainSection) { // Solo enviar respuesta si la sección principal está visible
+        if (response != null) { // Solo enviar respuesta si la sección principal está visible
           _messages.add({
-            "text": "Recibí tu mensaje: $message",
+            "text": response,
+            "isUser": false,
+          });
+        }else{
+          _messages.add({
+            "text": "Lo sentimos, tu problema parece ser un poco más complicado para mí. En caso de necesitar ayuda más específica puedes contactar al soporte técnico de UGMAventón: \nJuan Ventana: +58 213 789 8989 Margarita Puerta: +58 263 089 7359",
             "isUser": false,
           });
         }
@@ -110,7 +136,7 @@ class _HomePageState extends State<HomePage> {
       _showMainSection = false;
 
       _messages.add({
-        "text": "¿Qué dudas tienes con respecto a una $topic UGMAVENTÓN?",
+        "text": "¿Qué dudas tienes con respecto a $topic?",
         "isUser": false,
       });
     });
@@ -163,7 +189,7 @@ class _HomePageState extends State<HomePage> {
             const Text(
               "UGMAVENTÓN",
               style: TextStyle(
-                color: Colors.grey,
+                color: Color(0xFF003399),
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
@@ -258,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         }).toList(),
-                        // Botón Volver
+                        /*// Botón Volver
                         Padding(
                           padding: const EdgeInsets.only(top: 12.0),
                           child: ElevatedButton(
@@ -277,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.white, fontSize: 16),
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   // Mostrar mensajes
@@ -304,6 +330,25 @@ class _HomePageState extends State<HomePage> {
                       ),
                     );
                   }).toList(),
+                  // Mostrar el botón Volver siempre que haya mensajes o cuando no esté en la sección principal
+                  if (_messages.isNotEmpty || !_showMainSection)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: ElevatedButton(
+                        onPressed: _goBackToMainSection,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF003399),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                        ),
+                        child: const Text(
+                          "Volver",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
