@@ -64,6 +64,7 @@ class _HomePageState extends State<HomePage> {
   void _sendMessage(String message) {
     if (message.trim().isEmpty) return;
 
+
     setState(() {
       _messages.add({
         "text": message,
@@ -79,6 +80,8 @@ class _HomePageState extends State<HomePage> {
         _showMainSection = false; // Mantener solo el carrusel visible
       }
     });
+
+
 
     // Agregar respuesta automatica
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -96,6 +99,7 @@ class _HomePageState extends State<HomePage> {
 
   void _showCarousel(String topic) {
     setState(() {
+      _messages.clear();
       _currentCarouselItems = _faqResponses[topic] ?? [];
       _showMainSection = false;
 
@@ -123,7 +127,7 @@ class _HomePageState extends State<HomePage> {
     // Hacer scroll automático al final del chat sin mover el scroll hacia arriba
     Future.delayed(const Duration(milliseconds: 100), () {
       _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
+        _scrollController.position.minScrollExtent,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
