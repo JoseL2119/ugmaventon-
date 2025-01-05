@@ -17,12 +17,15 @@ TimeOfDay? _selectedTime;
 List<String> _selectedReferences = [];
 // Variable para almacenar el valor seleccionado
 String? puntoPartida = '';
+bool isDataLoaded = false; //Controla si los datos ya se cargaron desde BD
 
 class _EditTravelPageState extends State<EditTravel> {
   @override
   void initState() {
     //super.initState();
-    cargarDatosConductor(context);
+    if (!isDataLoaded) {
+      cargarDatosConductor(context); // Cargar los datos al iniciar la página
+    }
   }
 
   void _pickTime() async {
@@ -51,7 +54,6 @@ class _EditTravelPageState extends State<EditTravel> {
         _selectedTime = picked;
       });
     }
-    cargarDatosConductor(context);
   }
 
   void _showReferenceSelection() async {
@@ -179,7 +181,7 @@ class _EditTravelPageState extends State<EditTravel> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/mainMapa');
+                      Navigator.pushNamed(context, '/MyApp_Mapa_EDITAR');
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor:
@@ -357,6 +359,7 @@ class _EditTravelPageState extends State<EditTravel> {
           }
         });
 
+        isDataLoaded = true; // Marcamos que los datos han sido cargados
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Datos cargados exitosamente."),

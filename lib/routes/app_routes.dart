@@ -11,6 +11,7 @@ import '../pages/Elegir_Aventon.dart'; // testing
 import '../pages/info_travel.dart'; // testing
 
 import '../pages/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
+import '../pages/Mapa2.dart'; // Ajusta la ruta según la ubicación real del archivo
 import '../pages/MapaView.dart'; // Ajusta la ruta según la ubicación real del archivo
 
 class AppRoutes {
@@ -36,6 +37,9 @@ class AppRoutes {
             builder: (context) => const RegisterPassengerPage());
       case '/mainMapa':
         return MaterialPageRoute(builder: (context) => const MyApp_Mapa());
+      case '/MyApp_Mapa_EDITAR':
+        return MaterialPageRoute(
+            builder: (context) => const MyApp_Mapa_EDITAR());
       case '/View_Mapa':
         return MaterialPageRoute(builder: (context) => const View_Mapa());
 
