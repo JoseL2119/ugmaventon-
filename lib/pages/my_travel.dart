@@ -13,6 +13,81 @@ class MyTravel extends StatefulWidget {
 }
 
 class _MyTravelPageState extends State<MyTravel> {
+  int? nAsientos;
+  String? horaSalida;
+  String? driverId; // Para almacenar el ID del documento del conductor
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDriverData();
+  }
+
+  void fetchDriverData() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('drivers')
+        .where('email', isEqualTo: Correo)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      QueryDocumentSnapshot driverDoc = querySnapshot.docs.first;
+      setState(() {
+        nAsientos = driverDoc.get('N_Asientos');
+        horaSalida = driverDoc.get('Hora_Salida');
+        driverId = driverDoc.id; // Guardar el ID del documento
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('No se encontró el conductor con el correo especificado.'),
+          duration: Duration(seconds: 3), // Duración del mensaje
+        ),
+      );
+    }
+  }
+
+  void updateSeatsInFirestore(int newSeats) async {
+    if (driverId != null) {
+      FirebaseFirestore.instance
+          .collection('drivers')
+          .doc(driverId)
+          .update({'N_Asientos': newSeats}).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text('Disponibilidad de asientos actualizada en Firestore'),
+            duration: Duration(seconds: 3), // Duración del mensaje
+          ),
+        );
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                'Error al actualizar la disponibilidad de asientos: $error'),
+            duration: Duration(seconds: 3), // Duración del mensaje
+          ),
+        );
+      });
+    }
+  }
+
+  void incrementSeats() {
+    setState(() {
+      nAsientos = (nAsientos ?? 0) + 1;
+      updateSeatsInFirestore(nAsientos!);
+    });
+  }
+
+  void decrementSeats() {
+    if (nAsientos != null && nAsientos! > 0) {
+      setState(() {
+        nAsientos = nAsientos! - 1;
+        updateSeatsInFirestore(nAsientos!);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,8 +126,22 @@ class _MyTravelPageState extends State<MyTravel> {
                     indent: 0,
                     endIndent: 0,
                   ),
-                  // Seat Availability Section
-                  Text("DISPONIBILIDAD DE ASIENTOS"),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.remove_circle),
+                        onPressed: decrementSeats,
+                      ),
+                      Text(
+                          "DISPONIBILIDAD DE ASIENTOS ${nAsientos ?? 'Cargando...'}"),
+                      IconButton(
+                        icon: Icon(Icons.add_circle),
+                        onPressed: incrementSeats,
+                      ),
+                    ],
+                  ),
 
                   Divider(
                     color: const Color(0xFF6D8DC7),
@@ -61,20 +150,8 @@ class _MyTravelPageState extends State<MyTravel> {
                     endIndent: 0,
                   ),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.remove_circle),
-                        onPressed: () {},
-                      ),
-                      Text("ASIENTOS"),
-                      IconButton(
-                        icon: Icon(Icons.add_circle),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                  Text("HORA DE SALIDA: ${horaSalida ?? 'Cargando...'}"),
+
                   const SizedBox(height: 20),
                   // Start Journey Section
                   ElevatedButton(

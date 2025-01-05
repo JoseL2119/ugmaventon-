@@ -370,9 +370,6 @@ String formatTimeOfDay(TimeOfDay time) {
   return "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
 }
 
-//String? Correo = '0@gmail.com'; // DON PANCHO
-String? Correo = 'dhfhcfj@gmail.com';
-
 void actualizarDatosConductor(BuildContext context) async {
   if ((puntoPartida?.isEmpty ?? true) ||
       (geos?.isEmpty ?? true) ||
