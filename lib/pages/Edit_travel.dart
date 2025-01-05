@@ -298,6 +298,91 @@ class _EditTravelPageState extends State<EditTravel> {
       ),
     );
   }
+
+  Future<void> cargarDatosConductor(BuildContext context) async {
+    // Asegúrate de que el correo no esté vacío
+    if (Correo?.isEmpty ?? true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("El correo no puede estar vacío."),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
+    // Obtén una referencia a la colección de conductores
+    CollectionReference drivers =
+        FirebaseFirestore.instance.collection('drivers');
+
+    try {
+      // Realiza una consulta para encontrar el conductor por correo
+      QuerySnapshot querySnapshot =
+          await drivers.where('email', isEqualTo: Correo).get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Si encontramos el conductor, obtenemos el primer documento
+        DocumentSnapshot driverSnapshot = querySnapshot.docs.first;
+
+        // Obtén los datos del documento individualmente
+        final punto = driverSnapshot.get('Punto_Partida') ?? '';
+        setState(() {
+          puntoPartida =
+              punto; // Usamos directamente el valor de la base de datos
+          _selectedTime =
+              parseTimeOfDay(driverSnapshot.get('Hora_Salida') ?? '');
+          _selectedReferences =
+              List<String>.from(driverSnapshot.get('Referencias') ?? []);
+
+          // Convertir el string almacenado en Firestore a List<GeoPoint>
+          try {
+            List<String> geoStringList = driverSnapshot.get('Ruta').split(', ');
+            geos = [];
+            for (int i = 0; i < geoStringList.length; i += 2) {
+              final latStr = geoStringList[i].replaceFirst('Lat: ', '');
+              final lonStr = geoStringList[i + 1].replaceFirst('Lon: ', '');
+              final lat = double.tryParse(latStr);
+              final lon = double.tryParse(lonStr);
+              if (lat == null || lon == null) {
+                throw FormatException(
+                    'Invalid double value: Lat: $latStr, Lon: $lonStr');
+              }
+              geos.add(osm.GeoPoint(latitude: lat, longitude: lon));
+            }
+          } catch (e) {
+            print("Error al procesar la ruta: $e");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error al procesar la ruta: $e")),
+            );
+          }
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Datos cargados exitosamente."),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+        // Si no se encuentra el conductor, muestra un mensaje de error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("El conductor no existe en la base de datos."),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      // Capturar cualquier error durante la operación
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error al cargar los datos: $e"),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      debugPrint("Error al cargar los datos: $e");
+    }
+  }
 }
 
 class ReferenceSelectionWidget extends StatefulWidget {
@@ -452,89 +537,6 @@ void actualizarDatosConductor(BuildContext context) async {
       ),
     );
     debugPrint("Error al actualizar los datos: $e");
-  }
-}
-
-Future<void> cargarDatosConductor(BuildContext context) async {
-  // Asegúrate de que el correo no esté vacío
-  if (Correo?.isEmpty ?? true) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("El correo no puede estar vacío."),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    return;
-  }
-
-  // Obtén una referencia a la colección de conductores
-  CollectionReference drivers =
-      FirebaseFirestore.instance.collection('drivers');
-
-  try {
-    // Realiza una consulta para encontrar el conductor por correo
-    QuerySnapshot querySnapshot =
-        await drivers.where('email', isEqualTo: Correo).get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      // Si encontramos el conductor, obtenemos el primer documento
-      DocumentSnapshot driverSnapshot = querySnapshot.docs.first;
-
-      // Obtén los datos del documento individualmente
-
-      final punto = driverSnapshot.get('Punto_Partida') ?? '';
-      if (punto == 'ugma') {
-        puntoPartida = '0'; // Ugma es 0
-      } else {
-        puntoPartida = '1'; // Otro es 1
-      }
-      _selectedTime = parseTimeOfDay(driverSnapshot.get('Hora_Salida') ?? '');
-      try {
-        // Convertir el string almacenado en Firestore a List<GeoPoint>
-        List<String> geoStringList = driverSnapshot.get('Ruta').split(', ');
-        geos = [];
-        for (int i = 0; i < geoStringList.length; i += 2) {
-          final latStr = geoStringList[i].replaceFirst('Lat: ', '');
-          final lonStr = geoStringList[i + 1].replaceFirst('Lon: ', '');
-          final lat = double.tryParse(latStr);
-          final lon = double.tryParse(lonStr);
-          if (lat == null || lon == null) {
-            throw FormatException(
-                'Invalid double value: Lat: $latStr, Lon: $lonStr');
-          }
-          geos.add(osm.GeoPoint(latitude: lat, longitude: lon));
-        }
-      } catch (e) {
-        print("Error al procesar la ruta: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error al procesar la ruta: $e")),
-        );
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Datos cargados exitosamente."),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    } else {
-      // Si no se encuentra el conductor, muestra un mensaje de error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("El conductor no existe en la base de datos."),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    }
-  } catch (e) {
-    // Capturar cualquier error durante la operación
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Error al cargar los datos: $e"),
-        duration: Duration(seconds: 3),
-      ),
-    );
-    debugPrint("Error al cargar los datos: $e");
   }
 }
 
