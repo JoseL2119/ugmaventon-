@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Inicio Exitoso")),
                         );
-                        Navigator.pushNamed(context, '/user_profile');
+                        Navigator.pushNamed(context, '/home');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Correo o Contraseñas incorrectos')),
