@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
   final List<Map<String, dynamic>> _messages = [];
   List<String> _currentCarouselItems = [];
   bool _showMainSection = true;
-
+  bool _isWaitingForResponse = false;
   final Map<String, List<String>> _faqResponses = {
     "Cuenta": [
       "¿Cómo crear una cuenta?",
@@ -63,6 +63,9 @@ class _HomePageState extends State<HomePage> {
 
   void _sendMessage(String message) {
     if (message.trim().isEmpty) return;
+    if (_isWaitingForResponse) return; // Si ya se está esperando una respuesta, no hacer nada
+
+    _isWaitingForResponse = true; // Marcar que se está esperando una respuesta
 
 
     setState(() {
@@ -86,10 +89,13 @@ class _HomePageState extends State<HomePage> {
     // Agregar respuesta automatica
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        _messages.add({
-          "text": "Recibí tu mensaje: $message",
-          "isUser": false,
-        });
+        if (!_showMainSection) { // Solo enviar respuesta si la sección principal está visible
+          _messages.add({
+            "text": "Recibí tu mensaje: $message",
+            "isUser": false,
+          });
+        }
+        _isWaitingForResponse = false;
       });
 
       // Hacer scroll automático al final del chat
@@ -99,7 +105,7 @@ class _HomePageState extends State<HomePage> {
 
   void _showCarousel(String topic) {
     setState(() {
-      _messages.clear();
+      //_messages.clear();
       _currentCarouselItems = _faqResponses[topic] ?? [];
       _showMainSection = false;
 
@@ -115,6 +121,7 @@ class _HomePageState extends State<HomePage> {
 
   void _goBackToMainSection() {
     setState(() {
+      _messages.clear();
       _showMainSection = true; // Mostrar la sección principal
       _currentCarouselItems = []; // Limpiar carrusel
     });
