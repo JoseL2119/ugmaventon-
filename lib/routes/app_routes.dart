@@ -4,6 +4,7 @@ import '../pages/register_page.dart';
 import '../pages/type_register.dart'; // Importamos la pantalla de selección
 import '../pages/register_passenger.dart'; // Importamos la pantalla de pasajeros
 import '../pages/create_travel.dart'; // Importamos la pantalla de crear aventones
+import '../pages/Edit_travel.dart'; // Importamos la pantalla de crear aventones
 import '../pages/mapatest.dart'; // testing
 import '../pages/Elegir_Aventon.dart'; // testing
 
@@ -13,12 +14,14 @@ import '../pages/Mapa.dart'; // Ajusta la ruta según la ubicación real del arc
 import '../pages/MapaView.dart'; // Ajusta la ruta según la ubicación real del archivo
 
 class AppRoutes {
-  static const initialRoute = '/Select_Travel';
+  static const initialRoute = '/Edit_Travel';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/login':
         return MaterialPageRoute(builder: (context) => const LoginPage());
+      case '/Edit_Travel':
+        return MaterialPageRoute(builder: (context) => EditTravel());
       case '/Select_Travel':
         return MaterialPageRoute(builder: (context) => Select_Travel());
       case '/create_travel':
