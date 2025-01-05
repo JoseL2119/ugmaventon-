@@ -9,7 +9,6 @@ import '../pages/mapatest.dart'; // testing
 import '../pages/Elegir_Aventon.dart'; // testing
 import '../pages/my_travel.dart'; // testing
 
-
 import '../pages/info_travel.dart'; // testing
 
 import '../pages/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
@@ -17,11 +16,8 @@ import '../pages/Mapa2.dart'; // Ajusta la ruta según la ubicación real del ar
 import '../pages/MapaView.dart'; // Ajusta la ruta según la ubicación real del archivo
 
 class AppRoutes {
-<<<<<<< HEAD
   static const initialRoute = '/Edit_Travel';
-=======
-  static const initialRoute = '/mytravel';
->>>>>>> 0dc5b803e33c767c33563df6493c34451ee359dc
+  //static const initialRoute = '/mytravel';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
