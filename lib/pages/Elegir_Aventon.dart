@@ -294,12 +294,7 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
   @override
   void initState() {
     super.initState();
-    // Activar "Otros" por defecto si no hay ninguna referencia seleccionada
-    _tempSelectedReferences = widget.selectedReferences.isEmpty
-        ? ['Otros']
-        : List.from(widget.selectedReferences);
-
-    Navigator.pop(context, _tempSelectedReferences);
+    _tempSelectedReferences = List.from(widget.selectedReferences);
   }
 
   @override
