@@ -16,8 +16,7 @@ import '../pages/Mapa2.dart'; // Ajusta la ruta según la ubicación real del ar
 import '../pages/MapaView.dart'; // Ajusta la ruta según la ubicación real del archivo
 
 class AppRoutes {
-  static const initialRoute = '/Edit_Travel';
-  //static const initialRoute = '/mytravel';
+  static const initialRoute = '/mytravel';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {

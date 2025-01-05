@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,105 +12,71 @@ class MyTravel extends StatefulWidget {
   State<MyTravel> createState() => _MyTravelPageState();
 }
 
-TimeOfDay? _selectedTime;
-List<String> _selectedReferences = [];
-// Variable para almacenar el valor seleccionado
-String? puntoPartida = '';
-
 class _MyTravelPageState extends State<MyTravel> {
-  void _pickTime() async {
-    final TimeOfDay? picked = await showTimePicker(
-      cancelText: 'Regresar',
-      confirmText: 'Aceptar',
-      context: context,
-      initialTime: TimeOfDay.now(),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: const Color(0xFF6D8DC7),
-              surface: Color(0xFAFAFAFA),
-              onPrimary: Color(0xFAFAFAFA),
-              onSurface: Colors.black,
-            ),
-            dialogBackgroundColor: Colors.white,
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null && picked != _selectedTime) {
-      setState(() {
-        _selectedTime = picked;
-      });
-    }
-  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: const Color(0xFFFFD900),
+      appBar: AppBar(
+          title: Padding(
+        padding: const EdgeInsets.only(left: 0.0),
+        child: const Text(
+          "Mi Aventón",
+          style: TextStyle(color: Color(0xFFFFD900)),
+        ),
+      )),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.0),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.grey, blurRadius: 5.0, spreadRadius: 2.0)
+                ],
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    resizeToAvoidBottomInset: true,
-    backgroundColor: const Color(0xFFFFD900),
-    appBar: AppBar(
-      title: Padding(padding: const EdgeInsets.only(left: 0.0),
-      child: const Text(
-        "Mi Aventón",
-        style: TextStyle(color: Color(0xFFFFD900)),
-      ),
-      )
-    ),
-    body: SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.0),
-              boxShadow: const [
-                BoxShadow(
-                    color: Colors.grey, blurRadius: 5.0, spreadRadius: 2.0)
-              ],
-            ),
-            child: Column(
-              children: [
-                
-                const SizedBox(height: 20),
-
-                Divider(
+                  Divider(
                     color: const Color(0xFF6D8DC7),
                     thickness: 4,
                     indent: 0,
                     endIndent: 0,
                   ),
-                // Seat Availability Section
-                Text("DISPONIBILIDAD DE ASIENTOS"),
+                  // Seat Availability Section
+                  Text("DISPONIBILIDAD DE ASIENTOS"),
 
-                Divider(
+                  Divider(
                     color: const Color(0xFF6D8DC7),
                     thickness: 4,
                     indent: 0,
                     endIndent: 0,
-                ),
+                  ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.remove_circle),
-                      onPressed: () {},
-                    ),
-                    Text("ASIENTOS"),
-                    IconButton(
-                      icon: Icon(Icons.add_circle),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // Start Journey Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.remove_circle),
+                        onPressed: () {},
+                      ),
+                      Text("ASIENTOS"),
+                      IconButton(
+                        icon: Icon(Icons.add_circle),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Start Journey Section
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
@@ -124,9 +88,9 @@ Widget build(BuildContext context) {
                     ),
                     child: Text('INICIAR VIAJE'),
                   ),
-                const SizedBox(height: 20),
-                // Map Section
-                Padding(
+                  const SizedBox(height: 20),
+                  // Map Section
+                  Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Container(
                       width: double.infinity, // Ajusta el ancho
@@ -148,53 +112,52 @@ Widget build(BuildContext context) {
                       ),
                     ),
                   ),
-                const SizedBox(height: 20),
-                // Ride Options Section
+                  const SizedBox(height: 20),
+                  // Ride Options Section
 
-               Text("OPCIONES DE AVENTÓN"),
+                  Text("OPCIONES DE AVENTÓN"),
 
-                Divider(
+                  Divider(
                     color: const Color(0xFF6D8DC7),
                     thickness: 4,
                     indent: 0,
                     endIndent: 0,
-                ),
+                  ),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor:
-                          const Color(0xFFFAFAFA), // Color del texto
-                      backgroundColor:
-                          const Color(0xFF003AA7), // Color de fondo
-                      disabledBackgroundColor: const Color(0xFF6D8DC7),
-                    ),
-                    child: Text('EDITAR'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor:
+                              const Color(0xFFFAFAFA), // Color del texto
+                          backgroundColor:
+                              const Color(0xFF003AA7), // Color de fondo
+                          disabledBackgroundColor: const Color(0xFF6D8DC7),
+                        ),
+                        child: Text('EDITAR'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor:
+                              const Color(0xFFFAFAFA), // Color del texto
+                          backgroundColor:
+                              const Color(0xFF003AA7), // Color de fondo
+                          disabledBackgroundColor: const Color(0xFF6D8DC7),
+                        ),
+                        child: Text('REMOVER'),
+                      ),
+                    ],
                   ),
-                    ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor:
-                          const Color(0xFFFAFAFA), // Color del texto
-                      backgroundColor:
-                          const Color(0xFF003AA7), // Color de fondo
-                      disabledBackgroundColor: const Color(0xFF6D8DC7),
-                    ),
-                    child: Text('REMOVER'),
-                  ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
-}
-
