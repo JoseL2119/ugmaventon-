@@ -83,8 +83,7 @@ class _MyTravelPageState extends State<MyTravel> {
           .update({'N_Asientos': newSeats}).then((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Disponibilidad de asientos actualizada en Firestore'),
+            content: Text('Disponibilidad de asientos actualizada'),
             duration: Duration(seconds: 3), // Duración del mensaje
           ),
         );
@@ -253,12 +252,16 @@ class _MyTravelPageState extends State<MyTravel> {
                     children: [
                       IconButton(
                         icon: Icon(Icons.remove_circle),
-                        onPressed: () {},
+                        onPressed: () {
+                          decrementSeats();
+                        },
                       ),
                       Text("ASIENTOS"),
                       IconButton(
                         icon: Icon(Icons.add_circle),
-                        onPressed: () {},
+                        onPressed: () {
+                          incrementSeats();
+                        },
                       ),
                     ],
                   ),
