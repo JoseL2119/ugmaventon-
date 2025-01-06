@@ -246,6 +246,7 @@ class _InfoTravelPageState extends State<InfoTravel> {
                         ),
                       ),
                       const SizedBox(height: 10),
+                      Text("Número de placa: ${data['Placa'] ?? 'N/A'}"),
                       Text("Número de puertas: ${data['N_Puertas'] ?? 'N/A'}"),
                       Text(
                           "Número de asientos: ${data['N_Asientos'] ?? 'N/A'}"),
