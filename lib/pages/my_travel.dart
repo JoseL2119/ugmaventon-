@@ -34,10 +34,7 @@ class _MyTravelPageState extends State<MyTravel> {
     if (querySnapshot.docs.isNotEmpty) {
       QueryDocumentSnapshot driverDoc = querySnapshot.docs.first;
       setState(() {
-        if (driverDoc.get('Punto_Partida') == '' ||
-            List<String>.from(driverDoc.get('Referencias')).toString() == '' ||
-            (driverDoc.get('Ruta') as List).isEmpty ||
-            driverDoc.get('Hora_Salida') == null) {
+        if (driverDoc.get('Punto_Partida') == '') {
           Navigator.pushNamed(context, '/create_travel');
         }
 
