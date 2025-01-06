@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
 
                         // Redirigir a la pantalla de perfil de usuario
-                        Navigator.pushNamed(context, '/user_profile');
+                        Navigator.pushNamed(context, '/user_profile_page');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Correo o Contraseña incorrectos')),
