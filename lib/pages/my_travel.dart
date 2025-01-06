@@ -17,7 +17,6 @@ class _MyTravelPageState extends State<MyTravel> {
   String? horaSalida;
   String? driverId; // Para almacenar el ID del documento del conductor
   String? Partida;
-
   List<String> Referencias = ['Cargando'];
 
   @override
@@ -35,6 +34,13 @@ class _MyTravelPageState extends State<MyTravel> {
     if (querySnapshot.docs.isNotEmpty) {
       QueryDocumentSnapshot driverDoc = querySnapshot.docs.first;
       setState(() {
+        if (driverDoc.get('Punto_Partida') == '' ||
+            List<String>.from(driverDoc.get('Referencias')).toString() == '' ||
+            (driverDoc.get('Ruta') as List).isEmpty ||
+            driverDoc.get('Hora_Salida') == null) {
+          Navigator.pushNamed(context, '/create_travel');
+        }
+
         Partida = driverDoc.get('Punto_Partida');
         Referencias = List<String>.from(driverDoc.get('Referencias'));
         nAsientos = driverDoc.get('N_Asientos');
@@ -49,6 +55,26 @@ class _MyTravelPageState extends State<MyTravel> {
           duration: Duration(seconds: 3), // Duración del mensaje
         ),
       );
+    }
+  }
+
+  void clearDriverData() async {
+    if (driverId != null) {
+      FirebaseFirestore.instance.collection('drivers').doc(driverId).update({
+        'Punto_Partida': '',
+        'Ruta': [],
+        'Hora_Salida': null,
+        'Referencias': ''
+      }).then((_) {
+        Navigator.pushNamed(context, '/create_travel');
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al eliminar los datos del conductor: $error'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      });
     }
   }
 
@@ -300,7 +326,9 @@ class _MyTravelPageState extends State<MyTravel> {
                         child: Text('EDITAR'),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          clearDriverData();
+                        },
                         style: ElevatedButton.styleFrom(
                           foregroundColor:
                               const Color(0xFFFAFAFA), // Color del texto
