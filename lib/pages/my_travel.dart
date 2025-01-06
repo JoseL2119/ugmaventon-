@@ -112,90 +112,6 @@ class _MyTravelPageState extends State<MyTravel> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height *
-                  0.6, // Ajustar la altura según el tamaño de la pantalla
-              child: ListView.builder(
-                itemCount: 1,
-                itemBuilder: (context, index) {
-                  String referencias = Referencias.toString();
-
-                  // Intercambiar Punto de Partida y Referencias si Punto de Partida es 'Otro'
-                  String puntoPartida = Partida.toString();
-                  if (puntoPartida.toLowerCase() == 'otro') {
-                    puntoPartida = referencias;
-                    referencias = 'UGMA';
-                  }
-
-                  if (puntoPartida == 'ugma') {
-                    puntoPartida = "UGMA";
-                  }
-
-                  return GestureDetector(
-                    onTap: () {},
-                    child: Card(
-                      margin: EdgeInsets.symmetric(vertical: 8.0),
-                      color: const Color(0xFF003AA7),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    color: Colors.grey[300],
-                                    child: Center(child: Text("Typecar")),
-                                  ),
-                                  SizedBox(width: 8.0),
-                                  Text(
-                                    puntoPartida,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Icon(Icons.arrow_forward, size: 20.0),
-                                  Text(
-                                    referencias,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 8.0),
-                            Container(
-                              padding: const EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                      'Asientos: ${nAsientos ?? 'Cargando...'}'),
-                                  Spacer(),
-                                  Text(
-                                      'Salida: ${horaSalida ?? 'Cargando...'}'),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -207,6 +123,90 @@ class _MyTravelPageState extends State<MyTravel> {
               ),
               child: Column(
                 children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height *
+                        0.2, // Ajustar la altura según el tamaño de la pantalla
+                    child: ListView.builder(
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                        String referencias = Referencias.toString();
+
+                        // Intercambiar Punto de Partida y Referencias si Punto de Partida es 'Otro'
+                        String puntoPartida = Partida.toString();
+                        if (puntoPartida.toLowerCase() == 'otro') {
+                          puntoPartida = referencias;
+                          referencias = 'UGMA';
+                        }
+
+                        if (puntoPartida == 'ugma') {
+                          puntoPartida = "UGMA";
+                        }
+
+                        return GestureDetector(
+                          onTap: () {},
+                          child: Card(
+                            margin: EdgeInsets.symmetric(vertical: 8.0),
+                            color: const Color(0xFF003AA7),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(16.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16.0),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 60,
+                                          height: 60,
+                                          color: Colors.grey[300],
+                                          child: Center(child: Text("Typecar")),
+                                        ),
+                                        SizedBox(width: 8.0),
+                                        Text(
+                                          puntoPartida,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Icon(Icons.arrow_forward, size: 20.0),
+                                        Text(
+                                          referencias,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  Container(
+                                    padding: const EdgeInsets.all(4.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                            'Asientos: ${nAsientos ?? 'Cargando...'}'),
+                                        Spacer(),
+                                        Text(
+                                            'Salida: ${horaSalida ?? 'Cargando...'}'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   const SizedBox(height: 20),
 
                   Divider(
@@ -287,7 +287,9 @@ class _MyTravelPageState extends State<MyTravel> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/Edit_Travel');
+                        },
                         style: ElevatedButton.styleFrom(
                           foregroundColor:
                               const Color(0xFFFAFAFA), // Color del texto
