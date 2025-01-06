@@ -519,6 +519,7 @@ void actualizarDatosConductor(BuildContext context) async {
           duration: Duration(seconds: 3),
         ),
       );
+      Navigator.pushNamed(context, '/mytravel');
     } else {
       // Si no se encuentra el conductor, muestra un mensaje de error
       ScaffoldMessenger.of(context).showSnackBar(
