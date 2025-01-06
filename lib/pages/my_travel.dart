@@ -16,6 +16,9 @@ class _MyTravelPageState extends State<MyTravel> {
   int? nAsientos;
   String? horaSalida;
   String? driverId; // Para almacenar el ID del documento del conductor
+  String? Partida;
+
+  List<String> Referencias = ['Cargando'];
 
   @override
   void initState() {
@@ -32,6 +35,8 @@ class _MyTravelPageState extends State<MyTravel> {
     if (querySnapshot.docs.isNotEmpty) {
       QueryDocumentSnapshot driverDoc = querySnapshot.docs.first;
       setState(() {
+        Partida = driverDoc.get('Punto_Partida');
+        Referencias = List<String>.from(driverDoc.get('Referencias'));
         nAsientos = driverDoc.get('N_Asientos');
         horaSalida = driverDoc.get('Hora_Salida');
         driverId = driverDoc.id; // Guardar el ID del documento
@@ -107,6 +112,90 @@ class _MyTravelPageState extends State<MyTravel> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              height: MediaQuery.of(context).size.height *
+                  0.6, // Ajustar la altura según el tamaño de la pantalla
+              child: ListView.builder(
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  String referencias = Referencias.toString();
+
+                  // Intercambiar Punto de Partida y Referencias si Punto de Partida es 'Otro'
+                  String puntoPartida = Partida.toString();
+                  if (puntoPartida.toLowerCase() == 'otro') {
+                    puntoPartida = referencias;
+                    referencias = 'UGMA';
+                  }
+
+                  if (puntoPartida == 'ugma') {
+                    puntoPartida = "UGMA";
+                  }
+
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Card(
+                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                      color: const Color(0xFF003AA7),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(16.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Colors.grey[300],
+                                    child: Center(child: Text("Typecar")),
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Text(
+                                    puntoPartida,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Icon(Icons.arrow_forward, size: 20.0),
+                                  Text(
+                                    referencias,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Container(
+                              padding: const EdgeInsets.all(4.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                      'Asientos: ${nAsientos ?? 'Cargando...'}'),
+                                  Spacer(),
+                                  Text(
+                                      'Salida: ${horaSalida ?? 'Cargando...'}'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -126,19 +215,27 @@ class _MyTravelPageState extends State<MyTravel> {
                     indent: 0,
                     endIndent: 0,
                   ),
+                  // Seat Availability Section
+                  Text("DISPONIBILIDAD DE ASIENTOS"),
+
+                  Divider(
+                    color: const Color(0xFF6D8DC7),
+                    thickness: 4,
+                    indent: 0,
+                    endIndent: 0,
+                  ),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         icon: Icon(Icons.remove_circle),
-                        onPressed: decrementSeats,
+                        onPressed: () {},
                       ),
-                      Text(
-                          "DISPONIBILIDAD DE ASIENTOS ${nAsientos ?? 'Cargando...'}"),
+                      Text("ASIENTOS"),
                       IconButton(
                         icon: Icon(Icons.add_circle),
-                        onPressed: incrementSeats,
+                        onPressed: () {},
                       ),
                     ],
                   ),
@@ -150,21 +247,6 @@ class _MyTravelPageState extends State<MyTravel> {
                     endIndent: 0,
                   ),
 
-                  Text("HORA DE SALIDA: ${horaSalida ?? 'Cargando...'}"),
-
-                  const SizedBox(height: 20),
-                  // Start Journey Section
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor:
-                          const Color(0xFFFAFAFA), // Color del texto
-                      backgroundColor:
-                          const Color(0xFF003AA7), // Color de fondo
-                      disabledBackgroundColor: const Color(0xFF6D8DC7),
-                    ),
-                    child: Text('INICIAR VIAJE'),
-                  ),
                   const SizedBox(height: 20),
                   // Map Section
                   Padding(
