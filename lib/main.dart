@@ -12,19 +12,126 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MyHomePage extends StatefulWidget { // Renombrado a MyHomePage
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ChatTransition extends StatefulWidget {
+  final VoidCallback onClose;
+  final Widget child;
+
+  const _ChatTransition({required this.onClose, required this.child});
+
+  @override
+  State<_ChatTransition> createState() => _ChatTransitionState();
+}
+
+class _ChatTransitionState extends State<_ChatTransition>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOut,
+    );
+    _animationController.forward(); // Iniciar la animación al abrir
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animation,
+      child: Material(
+        elevation: 8.0,
+        borderRadius: BorderRadius.zero,
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool _showChat = false; // Variable para controlar la visibilidad del chat
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mi Aplicación'),
+      ),
+      body: Stack(
+        children: [
+          const Center(child: Text('Contenido principal de la app')),
+
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              backgroundColor: const Color(0xFFFFCC00),
+              onPressed: () {
+                setState(() {
+                  _showChat = !_showChat;
+                });
+              },
+              child: const Icon(Icons.android, color: Color(0xFF003399)),
+            ),
+          ),
+
+          if (_showChat)
+            _ChatTransition(
+              onClose: () {
+                setState(() {
+                  _showChat = false;
+                });
+              },
+              child: ChatWidget(onClose: () { //Pasamos el OnClose al Chat Widget
+                setState(() {
+                  _showChat = false;
+                });
+              }), // El ChatWidget es el hijo de _ChatTransition
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class ChatWidget extends StatefulWidget {
+  final VoidCallback onClose; // Recibe la función onClose
+  const ChatWidget({Key? key, required this.onClose}) : super(key: key);
+
+  @override
+  State<ChatWidget> createState() => _ChatWidgetState();
+}
+
+class _ChatWidgetState extends State<ChatWidget> {
   final TextEditingController _messageController = TextEditingController();
   final List<Map<String, dynamic>> _messages = [];
   List<String> _currentCarouselItems = [];
@@ -222,36 +329,39 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: const Color(0xFFF2F2F2),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFFFCC00),
-          title: Row(
-            children: [
-              const Icon(Icons.android, color: Color(0xFF003399), size: 32),
-              const SizedBox(width: 8),
-              const Text(
-                "Nando",
-                style: TextStyle(
-                  color: Color(0xFF003399),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+  // Modificación en el AppBar para el botón de cerrar
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF2F2F2),
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Quita la flecha de atrás
+        backgroundColor: const Color(0xFFFFCC00),
+        title: Row(
+          children: [
+            const Icon(Icons.android, color: Color(0xFF003399), size: 32),
+            const SizedBox(width: 8),
+            const Text(
+              "Nando",
+              style: TextStyle(
+                color: Color(0xFF003399),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
-              const Spacer(),
-              const Text(
-                "UGMAVENTÓN",
-                style: TextStyle(
-                  color: Color(0xFF003399),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+            ),
+            const Spacer(),
+            const Text(
+              "UGMAVENTÓN",
+              style: TextStyle(
+                color: Color(0xFF003399),
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
-            ],
-          ),
+            ),
+            IconButton(onPressed: widget.onClose, icon: const Icon(Icons.close, color: Color(0xFF003399))),
+          ],
         ),
+      ),
         body: Column(
           children: [
             Expanded(
@@ -340,26 +450,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           }).toList(),
-                          /*// Botón Volver
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: ElevatedButton(
-                            onPressed: _goBackToMainSection,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF003399),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 20),
-                            ),
-                            child: const Text(
-                              "Volver",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 16),
-                            ),
-                          ),
-                        ),*/
                         ],
                       ),
                     // Mostrar mensajes
