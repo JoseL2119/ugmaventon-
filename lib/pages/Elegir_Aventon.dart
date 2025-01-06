@@ -75,6 +75,10 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
             return false;
           }
 
+          if (data['N_Asientos'] == null || data['N_Asientos'] <= 0) {
+            return false;
+          }
+
           if (_selectedReferences.isEmpty) {
             return true;
           }
@@ -197,10 +201,6 @@ class _ChooseRideScreenState extends State<ChooseRideScreen> {
                           referencias = 'UGMA';
                         }
 
-                        if (puntoPartida == 'ugma') {
-                          puntoPartida = "UGMA";
-                        }
-
                         return GestureDetector(
                           onTap: () {
                             CorreoConductorRuta = data['email'];
@@ -320,7 +320,11 @@ class _ReferenceSelectionWidgetState extends State<ReferenceSelectionWidget> {
                 value: isSelected,
                 onChanged: (bool? value) {
                   setState(() {
-                    _tempSelectedReferences = value == true ? [reference] : [];
+                    if (value == true) {
+                      _tempSelectedReferences.add(reference);
+                    } else {
+                      _tempSelectedReferences.remove(reference);
+                    }
                   });
                 },
               );
