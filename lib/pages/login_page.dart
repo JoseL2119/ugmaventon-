@@ -11,13 +11,12 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   AuthService _authService = AuthService();
 
-//controladores/identificadores de lo que se agregue en los textFields
+  //controladores/identificadores de lo que se agregue en los textFields
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
     return Scaffold(
       backgroundColor: Color(0xFF003AA7),
       body: SafeArea(
@@ -26,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //Titulo  UGMAVENTON
                 SizedBox(
                   height: 10,
                 ),
@@ -40,13 +38,10 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 20,
                 ),
-
-                //Agregar el Logo Aca
                 Image.asset(
                   'assets/logoapp.PNG', // Ruta de la imagen.
-                  height: 200, // Para ajustar el logo.
+                  height: 200,
                 ),
-                //email textfield
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
@@ -72,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 20,
                 ),
-                //password
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
@@ -99,8 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 10,
                 ),
-
-                //se te olvidó la contraseña?
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Row(
@@ -115,12 +107,9 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                //sign in button
                 SizedBox(
                   height: 50,
                 ),
-
-                //Boton de IniciarSesion
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: GestureDetector(
@@ -129,23 +118,25 @@ class _LoginPageState extends State<LoginPage> {
                       final password = _passwordController.text.trim();
 
                       final success = await _authService.loginUser(
-                          email:email,
-                          password:password
+                        email: email,
+                        password: password,
                       );
 
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Inicio Exitoso")),
                         );
-                        Navigator.pushNamed(context, '/home');
+
+                        // Redirigir a la pantalla de perfil de usuario
+                        Navigator.pushNamed(context, '/user_profile');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Correo o Contraseñas incorrectos')),
+                          SnackBar(content: Text('Correo o Contraseña incorrectos')),
                         );
                       }
                     },
                     child: Container(
-                      width: 200, // Set the desired width
+                      width: 200,
                       padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                       decoration: BoxDecoration(
                         color: Color(0xFFFFD900),
@@ -167,8 +158,6 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 15,
                 ),
-
-                //Primera vez por aqui? Registrate?
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -190,8 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ],
-                )
-                //not a member? register now
+                ),
               ],
             ),
           ),
