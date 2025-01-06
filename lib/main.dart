@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 void main() {
   runApp(const MyApp());
@@ -78,37 +79,46 @@ class _HomePageState extends State<HomePage> {
     {"text": "Seguridad", "icon": Icons.shield},
   ];
 
+  String? _findMatch(String userInput) {
+    final input = userInput.toLowerCase();
+
+    // Buscar coincidencias en las preguntas específicas
+    String? bestMatch;
+    double bestSimilarity = 0.0;
+
+    for (String question in _faqAnswers.keys) {
+      final similarity = question.toLowerCase().similarityTo(input);
+      if (similarity >= 0.5 && similarity > bestSimilarity) {
+        bestMatch = question;
+        bestSimilarity = similarity;
+      }
+    }
+
+    return bestMatch;
+  }
+
   void _showCarousel(String topic) {
     setState(() {
-      //_messages.clear();
+      // Actualizar los elementos del carrusel con las preguntas del tema seleccionado
       _currentCarouselItems = _faqResponses[topic] ?? [];
+
+      // Ocultar la sección principal
       _showMainSection = false;
 
-      _messages.add({
-        "text": TextSpan(
-          children: [
-            const TextSpan(
-              text: "¿Qué dudas tienes con respecto a ",
-              style: TextStyle(color: Colors.black87),
-            ),
-            TextSpan(
-              text: topic,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold, // Negrita para $topic
-              ),
-            ),
-            const TextSpan(
-              text: "?",
-              style: TextStyle(color: Colors.black87),
-            ),
-          ],
-        ),
-        "isUser": false,
-      });
+      // Verificar si hay mensajes previos o si el último mensaje es diferente
+      bool shouldAddMessage = _messages.isEmpty ||
+          _messages.last["text"] != "¿Qué dudas tienes con respecto a $topic?";
+
+      // Agregar el mensaje solo si es necesario
+      if (shouldAddMessage) {
+        _messages.add({
+          "text": "¿Qué dudas tienes con respecto a $topic?",
+          "isUser": false,
+        });
+      }
     });
 
-    // Hacer scroll automático al final del chat
+    // Hacer scroll hasta el final de la conversación
     _scrollToBottom();
   }
 
@@ -137,46 +147,69 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
 
   void _sendMessage(String message) {
-    if (message
-        .trim()
-        .isEmpty) return;
-    if (_isWaitingForResponse)
-      return; // Si ya se está esperando una respuesta, no hacer nada
+    if (message.trim().isEmpty) return;
+    if (_isWaitingForResponse) return;
+    _isWaitingForResponse = true;
 
-    _isWaitingForResponse = true; // Marcar que se está esperando una respuesta
+    final String lowercaseMessage = message.toLowerCase();
+    bool topicFound = false;
 
-
-    setState(() {
-      _messages.add({
-        "text": message,
-        "isUser": true,
-      });
-      _messageController.clear();
-      _showMainSection = false;
-
-      // Reaparecer la sección principal si el mensaje no corresponde a las opciones del carrusel
-      if (!_faqResponses.keys.contains(message) &&
-          !_currentCarouselItems.contains(message)) {
-        _showMainSection = true; // Mostrar la sección principal
-        _currentCarouselItems = []; // Limpiar carrusel
-      } else {
-        _showMainSection = false; // Mantener solo el carrusel visible
+    // Verificar si es un tópico principal
+    for (var button in _faqButtons) {
+      if (lowercaseMessage.contains(button["text"].toString().toLowerCase())) {
+        _showCarousel(button["text"].toString());
+        topicFound = true;
+        setState(() {
+          _messages.add({
+            "text": message,
+            "isUser": true,
+          });
+        });
+        break;
       }
-    });
+    }
 
-    // Busca la respuesta asociada
+    if (!topicFound) {
+      // Buscar coincidencia en preguntas específicas
+      String? matchedQuestion = _findMatch(message);
+
+      // Solo agregar el mensaje del usuario si no es una selección del carrusel
+      if (!_currentCarouselItems.contains(message)) {
+        setState(() {
+          _messages.add({
+            "text": message,
+            "isUser": true,
+          });
+        });
+      }
+
+      if (matchedQuestion != null) {
+        message = matchedQuestion;
+        setState(() {
+          _showMainSection = false;
+        });
+      } else {
+        setState(() {
+          _showMainSection = true;
+          _currentCarouselItems = [];
+        });
+      }
+    }
+
+    _messageController.clear();
+
+    // Obtener la respuesta para la pregunta
     String? response = _faqAnswers[message];
 
-    // Agregar respuesta automatica
+    // Agregar respuesta automática después de un breve delay
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
-        if (response !=
-            null) { // Solo enviar respuesta si la sección principal está visible
+        if (response != null) {
           _messages.add({
             "text": response,
             "isUser": false,
           });
-        } else {
+        } else if (!topicFound) {
           _messages.add({
             "text": "Lo sentimos, tu problema parece ser un poco más complicado para mí. En caso de necesitar ayuda más específica puedes contactar al soporte técnico de UGMAventón: \nJuan Ventana: +58 213 789 8989 Margarita Puerta: +58 263 089 7359",
             "isUser": false,
@@ -185,7 +218,6 @@ class _HomePageState extends State<HomePage> {
         _isWaitingForResponse = false;
       });
 
-      // Hacer scroll automático al final del chat
       _scrollToBottom();
     });
   }
