@@ -3,14 +3,13 @@ import 'package:ugmaventon/pages/login_page.dart';
 import '../pages/register_page.dart';
 import '../pages/type_register.dart'; // Importamos la pantalla de selección
 import '../pages/register_passenger.dart'; // Importamos la pantalla de pasajeros
+
 import '../pages/create_travel.dart'; // Importamos la pantalla de crear aventones
 import '../pages/Edit_travel.dart'; // Importamos la pantalla de crear aventones
 import '../pages/mapatest.dart'; // testing
 import '../pages/Elegir_Aventon.dart'; // testing
 import '../pages/my_travel.dart'; // testing
-
 import '../pages/info_travel.dart'; // testing
-
 import '../pages/Mapa.dart'; // Ajusta la ruta según la ubicación real del archivo
 import '../pages/Mapa2.dart'; // Ajusta la ruta según la ubicación real del archivo
 import '../pages/MapaView.dart'; // Ajusta la ruta según la ubicación real del archivo
