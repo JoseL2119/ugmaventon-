@@ -55,7 +55,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      //iniciar sesion
+      // Iniciar sesión
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email,
           password: password
@@ -68,13 +68,56 @@ class AuthService {
   }
 
   // Cerrar Sesion
-  Future<void> logoutUser() async{
+  Future<void> logoutUser() async {
     await _firebaseAuth.signOut();
   }
 
-  // usuario actual
+  // Recuperar contraseña
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (e) {
+      print('Error enviando correo de recuperación: $e');
+      return false;
+    }
+  }
+
+  // Usuario actual
   User? get currentUser => _firebaseAuth.currentUser;
+
+  // Verificar si el usuario está autenticado
+  bool isUserAuthenticated() {
+    return _firebaseAuth.currentUser != null;
+  }
+
+  // Actualizar datos del perfil del usuario
+  Future<void> updateUserProfile({
+    String? displayName,
+    String? photoURL,
+  }) async {
+    try {
+      if (_firebaseAuth.currentUser != null) {
+        await _firebaseAuth.currentUser!.updateDisplayName(displayName);
+        await _firebaseAuth.currentUser!.updatePhotoURL(photoURL);
+      }
+    } catch (e) {
+      throw Exception('Error al actualizar el perfil: $e');
+    }
+  }
+
+  // Eliminar usuario (opcional)
+  Future<void> deleteUser() async {
+    try {
+      if (_firebaseAuth.currentUser != null) {
+        await _firebaseAuth.currentUser!.delete();
+      }
+    } catch (e) {
+      throw Exception('Error al eliminar el usuario: $e');
+    }
+  }
 }
+
 /*
 Future<bool> loginUser(String email, String password) async {
   try {

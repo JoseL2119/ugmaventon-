@@ -11,48 +11,40 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   AuthService _authService = AuthService();
 
-//controladores/identificadores de lo que se agregue en los textFields
+  //controladores/identificadores de lo que se agregue en los textFields
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
     return Scaffold(
-      backgroundColor: Color(0xFF003AA7),
+      backgroundColor: const Color(0xFF003AA7),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //Titulo  UGMAVENTON
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   'UGMAVENTÓN',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: Color(0xFFFFD900)),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Color(0xFFFFD900),
+                  ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-
-                //Agregar el Logo Aca
+                const SizedBox(height: 20),
                 Image.asset(
                   'assets/logoapp.PNG', // Ruta de la imagen.
-                  height: 200, // Para ajustar el logo.
+                  height: 200,
                 ),
-                //email textfield
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color(0xFFFAFAFA)),
+                      border: Border.all(color: const Color(0xFFFAFAFA)),
                       borderRadius: BorderRadius.circular(59),
                     ),
                     child: Center(
@@ -60,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.only(left: 20.0),
                         child: TextField(
                           controller: _emailController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Email',
                           ),
@@ -69,16 +61,13 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                //password
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      border: Border.all(color: Color(0xFFFAFAFA)),
+                      border: Border.all(color: const Color(0xFFFAFAFA)),
                       borderRadius: BorderRadius.circular(59),
                     ),
                     child: Center(
@@ -87,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: TextField(
                           controller: _passwordController,
                           obscureText: true,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Contraseña',
                           ),
@@ -96,31 +85,28 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-
-                //se te olvidó la contraseña?
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        '¿Se te olvidó tu contraseña?',
-                        style: TextStyle(
-                          color: Color(0xFFFAFAFA),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/password_recovery');
+                        },
+                        child: const Text(
+                          '¿Se te olvidó tu contraseña?',
+                          style: TextStyle(
+                            color: Color(0xFFFAFAFA),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                //sign in button
-                SizedBox(
-                  height: 50,
-                ),
-
-                //Boton de IniciarSesion
+                const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: GestureDetector(
@@ -129,30 +115,33 @@ class _LoginPageState extends State<LoginPage> {
                       final password = _passwordController.text.trim();
 
                       final success = await _authService.loginUser(
-                          email: email, password: password);
+                        email: email,
+                        password: password,
+                      );
 
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Inicio Exitoso")),
+                          const SnackBar(content: Text("Inicio Exitoso")),
                         );
-                        Navigator.pushNamed(context, '/mainMapa');
+
+                        // Redirigir a la pantalla de perfil de usuario
+                        Navigator.pushNamed(context, '/user_profile');
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text('Correo o Contraseñas incorrectos')),
+                          const SnackBar(
+                              content: Text('Correo o Contraseña incorrectos')),
                         );
                       }
                     },
                     child: Container(
-                      width: 200, // Set the desired width
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                      width: 200,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 15),
                       decoration: BoxDecoration(
-                        color: Color(0xFFFFD900),
+                        color: const Color(0xFFFFD900),
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           'Iniciar Sesión',
                           style: TextStyle(
@@ -165,15 +154,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-
-                //Primera vez por aqui? Registrate?
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       '¿Primera vez por aquí?',
                       style: TextStyle(
                         color: Color(0xFFFAFAFA),
@@ -183,16 +168,16 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         Navigator.pushNamed(context, '/type_register');
                       },
-                      child: Text(
+                      child: const Text(
                         ' ¡Registrate!',
                         style: TextStyle(
-                            color: Color(0xFFFAFAFA),
-                            fontWeight: FontWeight.bold),
+                          color: Color(0xFFFAFAFA),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
-                )
-                //not a member? register now
+                ),
               ],
             ),
           ),
