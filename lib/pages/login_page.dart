@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ugmaventon/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Asegúrate de tener esta importación
+import 'my_globals.dart'; // ACA SE GUARDA geos :D
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -115,6 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                       final email = _emailController.text.trim();
                       final password = _passwordController.text.trim();
 
+                      Correo = email;
+
                       final success = await _authService.loginUser(
                         email: email,
                         password: password,
@@ -128,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                         // Redirigir a la pantalla de perfil de usuario
                         Navigator.pushNamed(context, '/Select_Travel');
                       } else {
+                        Correo = email;
                         // Buscar en la colección drivers en Firestore
                         final driversCollection =
                             FirebaseFirestore.instance.collection('drivers');
