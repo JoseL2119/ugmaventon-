@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ugmaventon/services/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Asegúrate de tener esta importación
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   AuthService _authService = AuthService();
 
-  //controladores/identificadores de lo que se agregue en los textFields
+  // Controladores de los campos de texto
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -125,12 +126,25 @@ class _LoginPageState extends State<LoginPage> {
                         );
 
                         // Redirigir a la pantalla de perfil de usuario
-                        Navigator.pushNamed(context, '/user_profile');
+                        Navigator.pushNamed(context, '/Select_Travel');
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Correo o Contraseña incorrectos')),
-                        );
+                        // Buscar en la colección drivers en Firestore
+                        final driversCollection =
+                            FirebaseFirestore.instance.collection('drivers');
+                        final driver = await driversCollection
+                            .where('email', isEqualTo: email)
+                            .where('password', isEqualTo: password)
+                            .get();
+                        if (driver.docs.isNotEmpty) {
+                          Navigator.pushNamed(context, '/mytravel');
+                        } else {
+                          // Manejar el caso donde no se encuentra el documento
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Correo o Contraseña incorrectos')),
+                          );
+                        }
                       }
                     },
                     child: Container(
