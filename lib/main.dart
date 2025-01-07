@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ugmaventon/routes/app_routes.dart';
+import 'widgets/chat_wrapper.dart';
 
 // Importaciones de Firebase y FireStore
 import 'package:firebase_core/firebase_core.dart';
@@ -21,8 +22,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.initialRoute,
-      onGenerateRoute: AppRoutes.onGenerateRoute,
+      home: ChatWrapper(
+        child: Navigator(
+          initialRoute: AppRoutes.initialRoute,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
+          // O tu configuración existente de rutas
+        ),
+      ),
     );
   }
 }
